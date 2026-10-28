@@ -252,7 +252,7 @@ footer p{color:var(--muted);font-size:.95rem}
   <div class="wrap">
     <p class="eyebrow" style="color:var(--gold)">Order your film</p>
     <h2>It takes about 5 minutes</h2>
-    <p class="sub">Choose your film, add your photos and tell us what you'd like. We'll email you within a day to confirm and send a payment link.</p>
+    <p class="sub">Choose your film, add your photos and tell us what you'd like, then pay securely by card.</p>
 
     <form name="order" id="order-form" method="POST" action="/thanks.html" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="company" style="text-align:left">
       <input type="hidden" name="form-name" value="order">
@@ -301,7 +301,7 @@ footer p{color:var(--muted);font-size:.95rem}
           <option value="" selected>No preference – you choose</option><option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
         </select>
         <p class="hint">All our music is licensed for your film.</p></div>
-      <div class="note">After you send this, we'll email you within a day to confirm your order and send a payment link. Your film arrives within 5 days of payment. Having trouble uploading? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll help.</div>
+      <div class="note">After you send this, you'll go straight to secure card payment with Stripe. For a Custom Film, we'll email you a quote and payment link within a day instead. Your film arrives within 5 days of payment. Having trouble uploading? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll help.</div>
       <label class="check"><input type="checkbox" name="photo-permission" value="yes" required><span>I'm 18 or over. My photos are of my own family or friends (no celebrities or strangers), and I own them or have permission to use them.</span></label>
       <label class="check"><input type="checkbox" name="terms-and-start-now" value="yes" required><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and have read the <a href="/privacy.html" target="_blank">Privacy Policy</a>. I ask you to start my film straight away, and understand I lose my right to cancel once it's finished.</span></label>
       <button type="submit" class="btn" id="submit-btn">Send my order</button>
@@ -479,7 +479,9 @@ document.querySelectorAll('[data-plan]').forEach(function(b){
     try{
       var r=await fetch('/',{method:'POST',body:fd});
       if(!r.ok) throw new Error(r.status);
-      window.location.href='/thanks.html';
+      var pv=document.getElementById('plan').value;
+      var pk=pv.indexOf('Memory')===0?'memory':pv.indexOf('Family')===0?'family':'custom';
+      window.location.href='/thanks.html?plan='+pk;
     }catch(err){
       submitBtn.disabled=false; submitBtn.textContent='Send my order';
       submitStatus.textContent='Sorry, something went wrong sending your order. Please try again, or email us at thememoryproject00@gmail.com.';

@@ -16,8 +16,24 @@ a{display:inline-block;background:#8a5a3b;color:#fff;text-decoration:none;paddin
 <body>
 <div>
   <h1>Thank you.</h1>
-  <p>We've got your order. We'll email you within a day to confirm it and send a payment link. Your film will arrive within 5 days of payment.</p>
-  <a href="/">Back to The Memory Project</a>
+  <p id="msg">We've got your order and photos. Last step: pay securely by card and we'll start on your film. It arrives within 5 days of payment.</p>
+  <a id="pay" href="#">Pay now</a>
+  <p id="small" style="font-size:.9rem;margin-top:22px">Payments are handled by Stripe. <a href="/" style="display:inline;background:none;color:#8a5a3b;padding:0;text-decoration:underline;font-weight:500">Back to The Memory Project</a></p>
 </div>
+<script>
+(function(){
+  var links={memory:["https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00","Pay £24.99 now"],family:["https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01","Pay £44.99 now"]};
+  var plan=new URLSearchParams(location.search).get('plan');
+  var pay=document.getElementById('pay'), l=links[plan];
+  if(l){ pay.href=l[0]; pay.textContent=l[1]; }
+  else {
+    document.getElementById('msg').textContent=plan==='custom'
+      ? "We've got your order. We'll email you within one working day with a quote and a secure payment link. Your film arrives within 5 days of payment."
+      : "We've got your order. If you haven't paid yet, we'll email you a payment link within one working day.";
+    pay.href="/"; pay.textContent="Back to The Memory Project";
+    document.getElementById('small').style.display='none';
+  }
+})();
+</script>
 </body>
 </html>
