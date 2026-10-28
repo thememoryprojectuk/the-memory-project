@@ -300,7 +300,7 @@ footer p{color:var(--muted);font-size:.95rem}
           <option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
         </select>
         <p class="hint">All our music is licensed for your film.</p></div>
-      <div class="note">After you send this, we'll email you within a day to confirm your order and send a payment link. Your film arrives within 5 days of payment. Having trouble uploading? Send your order without photos and email them to <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a>.</div>
+      <div class="note">After you send this, we'll email you within a day to confirm your order and send a payment link. Your film arrives within 5 days of payment. Having trouble uploading? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll help.</div>
       <label class="check"><input type="checkbox" name="photo-permission" value="yes" required><span>I'm 18 or over. My photos are of my own family or friends (no celebrities or strangers), and I own them or have permission to use them.</span></label>
       <label class="check"><input type="checkbox" name="terms-and-start-now" value="yes" required><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and have read the <a href="/privacy.html" target="_blank">Privacy Policy</a>. I ask you to start my film straight away, and understand I lose my right to cancel once it's finished.</span></label>
       <button type="submit" class="btn" id="submit-btn">Send my order</button>
@@ -461,12 +461,12 @@ document.querySelectorAll('[data-plan]').forEach(function(b){
     e.preventDefault();
     if(!form.reportValidity()) return;
     if(photos.length>limit()){ photoStatus.scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    if(!photos.length && !confirm('You haven\'t added any photos. Send your order now and email your photos to us afterwards?')) return;
+    if(!photos.length){ photoStatus.textContent='Please add at least one photo.'; photoStatus.style.color='#a33'; dz.scrollIntoView({behavior:'smooth',block:'center'}); return; }
     var fd=new FormData(form);
     for(var i=1;i<=15;i++) fd.delete('photo'+i);
     photos.forEach(function(p,i){ fd.append('photo'+(i+1),p.blob,p.name); });
     submitBtn.disabled=true; submitBtn.textContent='Sending…';
-    submitStatus.textContent=photos.length?'Uploading your photos. This can take up to a minute.':'';
+    submitStatus.textContent='Uploading your photos. This can take up to a minute.';
     try{
       var r=await fetch('/',{method:'POST',body:fd});
       if(!r.ok) throw new Error(r.status);
