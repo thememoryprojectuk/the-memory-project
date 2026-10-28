@@ -67,18 +67,15 @@ exports.handler = async (event) => {
   }
   const occasion = d.occasion === "Something else" && d["occasion-other"] ? d["occasion-other"] : d.occasion;
   const ref = String(payload.id || payload.number || Date.now()).slice(-6).toUpperCase();
-  const PAY = {
-    memory: "https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00",
-    family: "https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01",
-  };
-  const planKey = /^Memory/.test(d.plan || "") ? "memory" : /^Family/.test(d.plan || "") ? "family" : "custom";
-  const payLink = PAY[planKey];
+  const isCustom = /^Custom/.test(d.plan || "");
+  const stripeRef = String(d["stripe-session"] || "");
   const firstName = String(d.name || "").trim().split(/\s+/)[0] || "there";
 
   const details =
     row("Order ref", ref) +
     row("Film", d.plan) +
     row("Photos received", String(photos.length)) +
+    row("Payment", isCustom ? "Quote to follow" : "Paid by card (Stripe)") +
     row("Occasion", occasion) +
     row("Needed by", fmtDate(d["needed-by"])) +
     row("Black and white photos", d["black-and-white"] || "No preference") +
@@ -96,7 +93,7 @@ exports.handler = async (event) => {
 ${row("Name", d.name)}${row("Email", d.email)}${details}
 </table>
 <p style="margin-top:16px"><strong>Photos:</strong><br>${photoLinks}</p>
-<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${payLink ? "check Stripe that this order has been paid before starting." : "send a quote and payment link within 1 working day."}</p>`);
+<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${isCustom ? "send a quote and payment link within 1 working day." : `check this payment is in Stripe → Payments before starting. Stripe ref: ${esc(stripeRef || "MISSING – do not start until you find their payment")}`}</p>`);
 
   // ---- 2. Confirmation to the customer ----
   const custHtml = wrap(`
@@ -106,9 +103,11 @@ ${row("Name", d.name)}${row("Email", d.email)}${details}
 <table style="border-collapse:collapse;font-size:15px">${details}</table>
 <h3 style="font-family:Georgia,serif;margin:20px 0 6px">What happens next</h3>
 <ol style="padding-left:20px;margin:0">
-${payLink ? `<li>If you haven't paid yet, you can pay securely here: <a href="${payLink}" style="color:#8a5a3b">pay for your film</a>.</li>` : `<li>Within one working day we'll email you a quote and a secure payment link.</li>`}
+${isCustom ? `<li>Within one working day we'll email you a quote and a secure payment link.</li>
 <li>Once you've paid, we'll repair and animate your photos and set them to music.</li>
-<li>Your film arrives by email within 5 days of payment.</li>
+<li>Your film arrives by email within 5 days of payment.</li>` : `<li>We've received your payment, thank you.</li>
+<li>We'll repair and animate your photos and set them to music.</li>
+<li>Your film arrives by email within 5 days.</li>`}
 </ol>
 <h3 style="font-family:Georgia,serif;margin:20px 0 6px">Your right to cancel</h3>
 <p style="margin:0 0 8px">When you ordered, you asked us to start your film straight away and confirmed you understand that you lose your right to cancel once your film is finished. You can cancel for a full refund before we start, or for a partial refund while we're working on it. To cancel, simply reply to this email with your name, order ref <strong>${esc(ref)}</strong> and the date of your order.</p>
