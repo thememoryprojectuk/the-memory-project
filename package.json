@@ -2,6 +2,7 @@
   "name": "the-memory-project",
   "private": true,
   "dependencies": {
-    "nodemailer": "6.10.1"
+    "nodemailer": "6.10.1",
+    "@netlify/blobs": "8.2.0"
   }
 }
