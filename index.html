@@ -275,7 +275,7 @@ footer p{color:var(--muted);font-size:.95rem}
           <select id="occasion" name="occasion"><option value="">Choose…</option><option>Christmas</option><option>Birthday</option><option>Anniversary</option><option>Mother's Day</option><option>Family reunion</option><option>In loving memory</option><option>Something else</option></select>
           <input id="occasion-other" name="occasion-other" class="hidden" placeholder="Tell us the occasion" style="margin-top:10px">
         </div>
-        <div class="field"><label for="needed-by">Needed by <span class="opt">(optional)</span></label><input id="needed-by" type="date" name="needed-by"><p class="hint">Please allow at least 7 days.</p></div>
+        <div class="field"><label for="needed-by">Needed by <span class="opt">(optional)</span></label><input id="needed-by" type="date" name="needed-by"><p class="hint">Your film arrives within 5 days of payment, so please choose a date at least 7 days away.</p></div>
       </div>
       <div class="field">
         <label for="photo-picker">Your photos</label>
@@ -294,8 +294,8 @@ footer p{color:var(--muted);font-size:.95rem}
           <option>Bring them to life in colour</option>
         </select>
         <p class="hint">Every photo is repaired either way. This only changes black and white photos.</p></div>
-      <div class="field"><label for="names">Film title <span class="opt">(optional)</span></label><input id="names" name="film-title" placeholder="e.g. Joan &amp; Ted – 60 years together"><p class="hint">Shown at the start of your film.</p></div>
-      <div class="field"><label for="message">Your message <span class="opt">(optional)</span></label><textarea id="message" name="message" placeholder="e.g. Happy 60th anniversary, with all our love"></textarea><p class="hint">Shown at the end of your film.</p></div>
+      <div class="field"><label for="names">Film title <span class="opt">(optional)</span></label><input id="names" name="film-title" maxlength="60" placeholder="e.g. Joan &amp; Ted – 60 years together"><p class="hint">Shown at the start of your film. Up to 60 characters.</p></div>
+      <div class="field"><label for="message">Your message <span class="opt">(optional)</span></label><textarea id="message" name="message" placeholder="e.g. Happy 60th anniversary, with all our love"></textarea><p class="hint">Shown at the end of your film. <span id="msg-count">0 / 30 words</span></p></div>
       <div class="field"><label for="music">Music <span class="opt">(optional)</span></label>
         <select id="music" name="music">
           <option value="" selected>No preference – you choose</option><option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
@@ -442,6 +442,14 @@ document.querySelectorAll('[data-plan]').forEach(function(b){
   picker.addEventListener('change',function(){ addFiles(picker.files); picker.value=''; });
   ['dragenter','dragover'].forEach(function(e){dz.addEventListener(e,function(){dz.classList.add('over');});});
   ['dragleave','drop'].forEach(function(e){dz.addEventListener(e,function(){dz.classList.remove('over');});});
+
+  // Message: max 30 words
+  var msg=document.getElementById('message'), mc=document.getElementById('msg-count');
+  function words(){return msg.value.trim()?msg.value.trim().split(/\s+/).length:0;}
+  msg.addEventListener('input',function(){
+    var n=words(); mc.textContent=n+' / 30 words'; mc.style.color=n>30?'#a33':'';
+    msg.setCustomValidity(n>30?'Please keep your message to 30 words or fewer.':'');
+  });
 
   // "Something else" occasion
   var occ=document.getElementById('occasion'), other=document.getElementById('occasion-other');
