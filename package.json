@@ -1,0 +1,7 @@
+{
+  "name": "the-memory-project",
+  "private": true,
+  "dependencies": {
+    "nodemailer": "6.10.1"
+  }
+}
