@@ -1,0 +1,12 @@
+*{box-sizing:border-box}
+body{margin:0;background:#f7f1e6;color:#2b2420;font-family:Inter,system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+header{border-bottom:1px solid #e4d8c6;padding:18px 20px;text-align:center}
+.logo{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.45rem;font-weight:600;color:#2b2420;text-decoration:none}
+main{max-width:720px;margin:0 auto;padding:44px 20px 60px}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(2.2rem,6vw,3rem);line-height:1.1;margin:0 0 6px}
+h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.6rem;margin:36px 0 8px}
+.updated{color:#6b5f55;font-size:.9rem;margin-top:0}
+ul{padding-left:22px}
+li{margin-bottom:6px}
+a{color:#8a5a3b}
+footer{border-top:1px solid #e4d8c6;padding:28px 20px;text-align:center;font-size:.95rem}
