@@ -106,6 +106,17 @@ textarea{min-height:96px;resize:vertical}
 .hint{font-size:.88rem;color:var(--muted);margin-top:6px}
 .note{background:var(--cream);border-radius:10px;padding:14px 16px;font-size:.93rem;color:var(--muted);margin-bottom:22px}
 form .btn{width:100%;font-size:1.05rem;padding:16px;margin-top:8px}
+form .btn:disabled{opacity:.6;cursor:wait;transform:none}
+.dropzone{position:relative;border:2px dashed #d6c7b1;border-radius:12px;background:#fff;padding:26px 16px;text-align:center;transition:border-color .2s,background .2s}
+.dropzone:hover,.dropzone.over{border-color:var(--sepia);background:#fffaf3}
+.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-text{display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:.95rem;pointer-events:none}
+.dz-text strong{color:var(--sepia);font-size:1.05rem}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;margin-top:12px}
+.thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#eee}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb button{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:15px;line-height:24px;cursor:pointer;padding:0}
+.center{text-align:center}
 .check{display:flex;gap:12px;align-items:flex-start;font-weight:400;font-size:.93rem;line-height:1.5;margin-bottom:14px;color:var(--ink)}
 .check input{width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:var(--sepia)}
 .check a{color:var(--sepia)}
@@ -241,9 +252,9 @@ footer p{color:var(--muted);font-size:.95rem}
   <div class="wrap">
     <p class="eyebrow" style="color:var(--gold)">Order your film</p>
     <h2>It takes about 5 minutes</h2>
-    <p class="sub">Tell us what you'd like. We'll reply by email within a day to collect your photos and take payment.</p>
+    <p class="sub">Choose your film, add your photos and tell us what you'd like. We'll email you within a day to confirm and send a payment link.</p>
 
-    <form name="order" method="POST" action="/thanks.html" data-netlify="true" netlify-honeypot="company" style="text-align:left">
+    <form name="order" id="order-form" method="POST" action="/thanks.html" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="company" style="text-align:left">
       <input type="hidden" name="form-name" value="order">
       <p class="hidden"><label>Leave this empty: <input name="company"></label></p>
 
@@ -262,8 +273,19 @@ footer p{color:var(--muted);font-size:.95rem}
       <div class="row">
         <div class="field"><label for="occasion">Occasion <span class="opt">(optional)</span></label>
           <select id="occasion" name="occasion"><option value="">Choose…</option><option>Christmas</option><option>Birthday</option><option>Anniversary</option><option>Mother's Day</option><option>Family reunion</option><option>In loving memory</option><option>Something else</option></select>
+          <input id="occasion-other" name="occasion-other" class="hidden" placeholder="Tell us the occasion" style="margin-top:10px">
         </div>
-        <div class="field"><label for="needed-by">Needed by <span class="opt">(optional)</span></label><input id="needed-by" type="date" name="needed-by"></div>
+        <div class="field"><label for="needed-by">Needed by <span class="opt">(optional)</span></label><input id="needed-by" type="date" name="needed-by"><p class="hint">Please allow at least 7 days.</p></div>
+      </div>
+      <div class="field">
+        <label for="photo-picker">Your photos</label>
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="photo-picker" accept="image/*" multiple>
+          <div class="dz-text"><strong>Tap to add photos</strong><span id="photo-limit">Add 15 photos</span></div>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+        <p class="hint" id="photo-status">Photos taken on your phone of old prints are perfect.</p>
+        <div class="hidden" aria-hidden="true"><input type="file" name="photo1" accept="image/*"><input type="file" name="photo2" accept="image/*"><input type="file" name="photo3" accept="image/*"><input type="file" name="photo4" accept="image/*"><input type="file" name="photo5" accept="image/*"><input type="file" name="photo6" accept="image/*"><input type="file" name="photo7" accept="image/*"><input type="file" name="photo8" accept="image/*"><input type="file" name="photo9" accept="image/*"><input type="file" name="photo10" accept="image/*"><input type="file" name="photo11" accept="image/*"><input type="file" name="photo12" accept="image/*"><input type="file" name="photo13" accept="image/*"><input type="file" name="photo14" accept="image/*"><input type="file" name="photo15" accept="image/*"></div>
       </div>
       <div class="field"><label for="names">Names to show on screen <span class="opt">(optional)</span></label><input id="names" name="names-on-screen" placeholder="e.g. Grandma Joan & Grandad Ted"></div>
       <div class="field"><label for="message">Your message <span class="opt">(optional)</span></label><textarea id="message" name="message" placeholder="e.g. Happy 60th anniversary, with all our love"></textarea></div>
@@ -272,10 +294,11 @@ footer p{color:var(--muted);font-size:.95rem}
           <option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
         </select>
         <p class="hint">All our music is licensed for your film.</p></div>
-      <div class="note">After you send this, we'll email you within a day. Just reply with your photos attached and we'll send a payment link. Your film arrives within 5 days of that.</div>
+      <div class="note">After you send this, we'll email you within a day to confirm your order and send a payment link. Your film arrives within 5 days of payment. Having trouble uploading? Send your order without photos and email them to <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a>.</div>
       <label class="check"><input type="checkbox" name="photo-permission" value="yes" required><span>I'm 18 or over. My photos are of my own family or friends (no celebrities or strangers), and I own them or have permission to use them.</span></label>
       <label class="check"><input type="checkbox" name="terms-and-start-now" value="yes" required><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and have read the <a href="/privacy.html" target="_blank">Privacy Policy</a>. I ask you to start my film straight away, and understand I lose my right to cancel once it's finished.</span></label>
-      <button type="submit" class="btn">Send my order</button>
+      <button type="submit" class="btn" id="submit-btn">Send my order</button>
+      <p class="hint center" id="submit-status" role="status"></p>
     </form>
   </div>
 </section>
@@ -314,6 +337,141 @@ document.querySelectorAll('[data-plan]').forEach(function(b){
   var v=document.getElementById('sample'),ph=document.getElementById('sample-ph');
   v.addEventListener('loadeddata',function(){ph.style.display='none';});
   v.addEventListener('error',function(){v.style.display='none';});
+})();
+
+// ----- Order form -----
+(function(){
+  var form=document.getElementById('order-form');
+  var plan=document.getElementById('plan');
+  var picker=document.getElementById('photo-picker');
+  var dz=document.getElementById('dropzone');
+  var thumbs=document.getElementById('thumbs');
+  var photoStatus=document.getElementById('photo-status');
+  var limitText=document.getElementById('photo-limit');
+  var submitBtn=document.getElementById('submit-btn');
+  var submitStatus=document.getElementById('submit-status');
+  var MAX_UPLOAD=15, BUDGET=7*1024*1024;
+  var photos=[]; // {name, blob, url}
+
+  // Plan buttons also update the photo limit
+  document.querySelectorAll('[data-plan]').forEach(function(b){b.addEventListener('click',function(){setTimeout(update,0);});});
+
+  function limit(){
+    var v=plan.value;
+    if(v.indexOf('Memory')===0) return 5;
+    return 15;
+  }
+  function update(){
+    var l=limit(), n=photos.length;
+    if(plan.value.indexOf('Custom')===0){
+      limitText.textContent='Add your first 15 photos here. We\'ll collect the rest by email.';
+    } else {
+      limitText.textContent='Add '+l+' photos';
+    }
+    if(n>l){
+      photoStatus.textContent='You\'ve added '+n+' photos. This film has '+l+', so please remove '+(n-l)+' or choose a bigger film.';
+      photoStatus.style.color='#a33';
+    } else {
+      photoStatus.textContent=n?(n+' of '+l+' photos added.'):'Photos taken on your phone of old prints are perfect.';
+      photoStatus.style.color='';
+    }
+  }
+  plan.addEventListener('change',update);
+
+  // Shrink each photo in the browser so the whole order uploads quickly
+  function shrink(file,maxSide,quality){
+    return new Promise(function(resolve){
+      var url=URL.createObjectURL(file), img=new Image();
+      img.onload=function(){
+        var s=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+        var c=document.createElement('canvas');
+        c.width=Math.round(img.naturalWidth*s); c.height=Math.round(img.naturalHeight*s);
+        var ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height);
+        ctx.drawImage(img,0,0,c.width,c.height);
+        c.toBlob(function(b){URL.revokeObjectURL(url);resolve(b);},'image/jpeg',quality);
+      };
+      img.onerror=function(){URL.revokeObjectURL(url);resolve(null);};
+      img.src=url;
+    });
+  }
+  function total(){return photos.reduce(function(t,p){return t+p.blob.size;},0);}
+
+  function render(){
+    thumbs.innerHTML='';
+    photos.forEach(function(p,i){
+      var d=document.createElement('div'); d.className='thumb';
+      var im=document.createElement('img'); im.src=p.url; im.alt='Photo '+(i+1);
+      var x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','Remove photo '+(i+1));
+      x.onclick=function(){URL.revokeObjectURL(p.url);photos.splice(i,1);render();};
+      d.appendChild(im); d.appendChild(x); thumbs.appendChild(d);
+    });
+    update();
+  }
+
+  async function addFiles(list){
+    var files=Array.prototype.slice.call(list).filter(function(f){return f.type.indexOf('image/')===0||/\.(heic|heif)$/i.test(f.name);});
+    var room=MAX_UPLOAD-photos.length;
+    if(files.length>room){ files=files.slice(0,Math.max(room,0)); alert('You can upload 15 photos here. Email us any extras.'); }
+    var failed=0;
+    for(var i=0;i<files.length;i++){
+      photoStatus.textContent='Preparing photo '+(i+1)+' of '+files.length+'…';
+      var b=await shrink(files[i],1600,0.85);
+      if(!b){
+        if(files[i].size<1.5*1024*1024){ b=files[i]; } else { failed++; continue; }
+      }
+      photos.push({name:'photo-'+(photos.length+1)+'.jpg',blob:b,url:URL.createObjectURL(b)});
+    }
+    // Keep the whole upload under the size limit
+    if(total()>BUDGET){
+      photoStatus.textContent='Making photos a little smaller…';
+      for(var j=0;j<photos.length;j++){
+        var smaller=await shrink(photos[j].blob,1280,0.72);
+        if(smaller) photos[j].blob=smaller;
+      }
+    }
+    render();
+    if(failed){ alert(failed+' photo'+(failed>1?'s':'')+' couldn\'t be read. Try saving them as JPEG, or email them to us.'); }
+  }
+  picker.addEventListener('change',function(){ addFiles(picker.files); picker.value=''; });
+  ['dragenter','dragover'].forEach(function(e){dz.addEventListener(e,function(){dz.classList.add('over');});});
+  ['dragleave','drop'].forEach(function(e){dz.addEventListener(e,function(){dz.classList.remove('over');});});
+
+  // "Something else" occasion
+  var occ=document.getElementById('occasion'), other=document.getElementById('occasion-other');
+  occ.addEventListener('change',function(){
+    var on=occ.value==='Something else';
+    other.classList.toggle('hidden',!on); other.required=on;
+    if(on) other.focus(); else other.value='';
+  });
+
+  // Needed-by date: at least 7 days from today
+  var nb=document.getElementById('needed-by'), d=new Date(); d.setDate(d.getDate()+7);
+  nb.min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  nb.addEventListener('input',function(){
+    nb.setCustomValidity(nb.value&&nb.value<nb.min?'Please choose a date at least 7 days from today.':'');
+  });
+
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    if(!form.reportValidity()) return;
+    if(photos.length>limit()){ photoStatus.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    if(!photos.length && !confirm('You haven\'t added any photos. Send your order now and email your photos to us afterwards?')) return;
+    var fd=new FormData(form);
+    for(var i=1;i<=15;i++) fd.delete('photo'+i);
+    photos.forEach(function(p,i){ fd.append('photo'+(i+1),p.blob,p.name); });
+    submitBtn.disabled=true; submitBtn.textContent='Sending…';
+    submitStatus.textContent=photos.length?'Uploading your photos. This can take up to a minute.':'';
+    try{
+      var r=await fetch('/',{method:'POST',body:fd});
+      if(!r.ok) throw new Error(r.status);
+      window.location.href='/thanks.html';
+    }catch(err){
+      submitBtn.disabled=false; submitBtn.textContent='Send my order';
+      submitStatus.textContent='Sorry, something went wrong sending your order. Please try again, or email us at thememoryproject00@gmail.com.';
+      submitStatus.style.color='#a33';
+    }
+  });
+  update();
 })();
 </script>
 </body>
