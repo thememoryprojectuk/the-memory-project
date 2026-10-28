@@ -103,6 +103,10 @@ input,select,textarea{width:100%;font:inherit;font-size:1rem;padding:12px 14px;b
 input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
 textarea{min-height:96px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.payfirst{max-width:620px;margin:40px auto 0;background:var(--paper);color:var(--ink);border-radius:16px;padding:34px 30px}
+.payfirst .opts{display:grid;gap:12px;margin:22px 0}
+.payfirst .opts .btn{width:100%;text-align:center}
+.paid-banner{background:#e7f2e3;color:#2f5a2a;border-radius:10px;padding:14px 16px;font-weight:600;margin-bottom:22px}
 .hint{font-size:.88rem;color:var(--muted);margin-top:6px}
 .note{background:var(--cream);border-radius:10px;padding:14px 16px;font-size:.93rem;color:var(--muted);margin-bottom:22px}
 form .btn{width:100%;font-size:1.05rem;padding:16px;margin-top:8px}
@@ -221,20 +225,20 @@ footer p{color:var(--muted);font-size:.95rem}
         <h3>Memory Film</h3>
         <div class="price">£24.99</div>
         <ul><li>5 photos, repaired and animated</li><li>Choose from our music library</li><li>Your own title and message</li></ul>
-        <a href="#order" class="btn ghost" data-plan="Memory Film – £24.99">Choose</a>
+        <a href="https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00" class="btn ghost">Choose and pay</a>
       </div>
       <div class="plan pop">
         <span class="badge">Most popular</span>
         <h3>Family Film</h3>
         <div class="price">£44.99</div>
         <ul><li>15 photos, repaired and animated</li><li>Choose from our music library</li><li>Your own title and message</li></ul>
-        <a href="#order" class="btn" data-plan="Family Film – £44.99">Choose</a>
+        <a href="https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01" class="btn">Choose and pay</a>
       </div>
       <div class="plan">
         <h3>Custom Film</h3>
         <div class="price"><span style="font-size:1.1rem;font-weight:500">from</span> £59.99</div>
         <ul><li>16 or more photos</li><li>Perfect for big birthdays, anniversaries and memorials</li><li>We'll plan it with you</li></ul>
-        <a href="#order" class="btn ghost" data-plan="Custom Film – from £59.99">Ask about a custom film</a>
+        <a href="#order" class="btn ghost" data-custom>Ask about a custom film</a>
       </div>
     </div>
   </div>
@@ -252,10 +256,23 @@ footer p{color:var(--muted);font-size:.95rem}
   <div class="wrap">
     <p class="eyebrow" style="color:var(--gold)">Order your film</p>
     <h2>It takes about 5 minutes</h2>
-    <p class="sub">Choose your film, add your photos and tell us what you'd like, then pay securely by card.</p>
+    <p class="sub">Pay for your film first, then you'll come straight back here to add your photos and tell us what you'd like.</p>
 
-    <form name="order" id="order-form" method="POST" action="/thanks.html" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="company" style="text-align:left">
+    <div class="payfirst" id="pay-first">
+      <h3 style="margin:0 0 6px">Step 1: choose and pay</h3>
+      <p class="hint" style="margin:0">Pay securely by card with Stripe. Once you've paid, you'll come straight back here to send your photos.</p>
+      <div class="opts">
+        <a class="btn" href="https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01">Family Film – £44.99 (15 photos)</a>
+        <a class="btn ghost" href="https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00">Memory Film – £24.99 (5 photos)</a>
+        <a class="btn ghost" href="#order" data-custom>Custom Film – from £59.99 (ask for a quote)</a>
+      </div>
+      <p class="hint" style="margin:0">Already paid but lost the page? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll sort it.</p>
+    </div>
+
+    <form name="order" id="order-form" class="hidden" method="POST" action="/thanks.html" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="company" style="text-align:left">
       <input type="hidden" name="form-name" value="order">
+      <input type="hidden" name="stripe-session" id="stripe-session">
+      <div class="paid-banner hidden" id="paid-banner">Payment received, thank you. Now add your photos and details.</div>
       <p class="hidden"><label>Leave this empty: <input name="company"></label></p>
 
       <div class="field">
@@ -301,7 +318,7 @@ footer p{color:var(--muted);font-size:.95rem}
           <option value="" selected>No preference – you choose</option><option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
         </select>
         <p class="hint">All our music is licensed for your film.</p></div>
-      <div class="note">After you send this, you'll go straight to secure card payment with Stripe. For a Custom Film, we'll email you a quote and payment link within a day instead. Your film arrives within 5 days of payment. Having trouble uploading? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll help.</div>
+      <div class="note" id="order-note">Your film arrives within 5 days of sending this order. Having trouble uploading? Email us at <a href="mailto:thememoryproject00@gmail.com">thememoryproject00@gmail.com</a> and we'll help.</div>
       <label class="check"><input type="checkbox" name="photo-permission" value="yes" required><span>I'm 18 or over. My photos are of my own family or friends (no celebrities or strangers), and I own them or have permission to use them.</span></label>
       <label class="check"><input type="checkbox" name="terms-and-start-now" value="yes" required><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and have read the <a href="/privacy.html" target="_blank">Privacy Policy</a>. I ask you to start my film straight away, and understand I lose my right to cancel once it's finished.</span></label>
       <button type="submit" class="btn" id="submit-btn">Send my order</button>
@@ -335,10 +352,33 @@ footer p{color:var(--muted);font-size:.95rem}
 </footer>
 
 <script>
-// Pre-select plan when a "Choose" button is clicked
-document.querySelectorAll('[data-plan]').forEach(function(b){
-  b.addEventListener('click',function(){document.getElementById('plan').value=b.dataset.plan;});
-});
+// Only show the order form after payment (or for a Custom Film quote)
+(function(){
+  var q=new URLSearchParams(location.search);
+  var paid=q.get('paid'), sid=q.get('session_id')||'';
+  var form=document.getElementById('order-form'), payFirst=document.getElementById('pay-first'), plan=document.getElementById('plan');
+  var names={memory:'Memory Film – £24.99',family:'Family Film – £44.99',custom:'Custom Film – from £59.99'};
+  function show(key){
+    [].slice.call(plan.options).forEach(function(o){ if(o.value!==names[key]) o.remove(); });
+    plan.value=names[key];
+    payFirst.classList.add('hidden'); form.classList.remove('hidden');
+    plan.dispatchEvent(new Event('change'));
+  }
+  if((paid==='memory'||paid==='family') && /^cs_/.test(sid)){
+    document.getElementById('stripe-session').value=sid;
+    document.getElementById('paid-banner').classList.remove('hidden');
+    show(paid);
+    window.addEventListener('load',function(){document.getElementById('order').scrollIntoView();});
+  }
+  document.querySelectorAll('[data-custom]').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(!form.classList.contains('hidden')) return;
+      show('custom');
+      document.getElementById('order-note').textContent="Tell us about your Custom Film and we'll email you a quote and secure payment link within one working day. Your film arrives within 5 days of payment.";
+      document.getElementById('submit-btn').textContent='Ask for my quote';
+    });
+  });
+})();
 // Show the placeholder until a sample.mp4 exists
 (function(){
   var v=document.getElementById('sample'),ph=document.getElementById('sample-ph');
@@ -360,8 +400,6 @@ document.querySelectorAll('[data-plan]').forEach(function(b){
   var MAX_UPLOAD=15, BUDGET=7*1024*1024;
   var photos=[]; // {name, blob, url}
 
-  // Plan buttons also update the photo limit
-  document.querySelectorAll('[data-plan]').forEach(function(b){b.addEventListener('click',function(){setTimeout(update,0);});});
 
   function limit(){
     var v=plan.value;
