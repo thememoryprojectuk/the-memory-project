@@ -11,15 +11,48 @@ body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:c
 h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(2.4rem,7vw,3.6rem);margin:0 0 14px}
 p{color:#6b5f55;font-size:1.1rem;max-width:480px;margin:0 auto 28px;line-height:1.6}
 a{display:inline-block;background:#8a5a3b;color:#fff;text-decoration:none;padding:13px 26px;border-radius:999px;font-weight:600}
+.invite{background:#fffaf1;border:1px solid #e4d8c6;border-radius:14px;padding:22px 20px;margin:0 auto 28px;max-width:440px}
+.invite h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.7rem;margin:0 0 8px}
+.invite p{font-size:1rem;margin:0 auto 16px}
+.share{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.share a,.share button{font:600 .95rem Inter,system-ui,sans-serif;padding:10px 16px;border-radius:999px;border:1px solid #8a5a3b;background:#fff;color:#8a5a3b;cursor:pointer;text-decoration:none}
+.share .wa{background:#25D366;border-color:#25D366;color:#fff}
+#copied{display:block;font-size:.9rem;color:#2f7a3b;margin-top:10px;min-height:1em}
 </style>
 </head>
 <body>
 <div>
   <h1>Thank you.</h1>
   <p id="msg">Your payment went through and your order has been sent to us. We'll start on your film and email it to you within 5 days. Stripe will email you a receipt.</p>
+  <div class="invite" id="invite" hidden>
+    <h2>Invite a friend</h2>
+    <p>Send your link to someone who'd love a film. They get <strong>£5 off</strong> their first one, and when they order, you get <strong>£5 off</strong> your next.</p>
+    <div class="share">
+      <a class="wa" id="share-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a id="share-sms" href="#">Text</a>
+      <a id="share-email" href="#">Email</a>
+      <button type="button" id="share-copy">Copy link</button>
+    </div>
+    <span id="copied"></span>
+  </div>
   <a href="/">Back to The Memory Project</a>
 </div>
 <script>
+(function(){
+  var o=null; try{ o=JSON.parse(localStorage.getItem('tmp_order')||'null'); }catch(_){}
+  if(!o||!o.ref) return;
+  var link=location.origin+'/?ref='+encodeURIComponent(o.ref)+(o.first?'&from='+encodeURIComponent(o.first):'');
+  var msg="I've just ordered a film from The Memory Project. They turn old family photos into short films where the faces smile and move again. Here's £5 off your first one: "+link;
+  document.getElementById('share-wa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('share-sms').href='sms:?&body='+encodeURIComponent(msg);
+  document.getElementById('share-email').href='mailto:?subject='+encodeURIComponent('£5 off a film of your old family photos')+'&body='+encodeURIComponent(msg);
+  document.getElementById('share-copy').onclick=function(){
+    var done=function(){document.getElementById('copied').textContent='Link copied. Paste it in a message to a friend.';};
+    if(navigator.clipboard){ navigator.clipboard.writeText(link).then(done,function(){prompt('Copy your link:',link);}); } else { prompt('Copy your link:',link); }
+  };
+  if(navigator.share){ var s=document.getElementById('share-sms'); s.textContent='Share'; s.href='#'; s.onclick=function(e){e.preventDefault(); navigator.share({title:'The Memory Project',text:msg}).catch(function(){});}; }
+  document.getElementById('invite').hidden=false;
+})();
 if(new URLSearchParams(location.search).get('plan')==='custom'){
   document.getElementById('msg').textContent="We've got your Custom Film request. We'll email you within one working day with a quote and a secure payment link. Your film arrives within 5 days of payment.";
 }

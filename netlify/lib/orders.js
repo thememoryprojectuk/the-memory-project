@@ -58,7 +58,10 @@ async function sendOrderEmails({ d, photos, ref, paid, stripeId }) {
     row("Black and white photos", d["black-and-white"] || "No preference") +
     row("Film title", d["film-title"]) +
     row("Message", d.message) +
-    row("Music", d.music || "No preference");
+    row("Music", d.music || "No preference") +
+    row("Anything to avoid", d.avoid) +
+    row("Heard about us", d["heard-about"]) +
+    row("Referred by", d["referred-by"]);
 
   const photoLinks = photos.length
     ? photos.map((u, i) => `<a href="${esc(u)}" style="color:#8a5a3b">Photo ${i + 1}</a>`).join(" &middot; ")
@@ -70,7 +73,7 @@ async function sendOrderEmails({ d, photos, ref, paid, stripeId }) {
 ${row("Name", d.name)}${row("Email", d.email)}${details}${stripeId ? row("Stripe payment", stripeId) : ""}
 </table>
 <p style="margin-top:16px"><strong>Photos:</strong><br>${photoLinks}</p>
-<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${paid ? "make the film and email it within 5 days." : "send a quote and payment link within 1 working day."}</p>`);
+<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${paid ? "make the film and email it within 5 days." : "send a quote and payment link within 1 working day."}${d["referred-by"] ? "<br><strong>Referral:</strong> this customer was referred by " + esc(d["referred-by"]) + ". Once paid, send that person a single-use £5 code for their next film." : ""}</p>`);
 
   const custHtml = wrap(`
 <p>Hi ${esc(firstName)},</p>
@@ -88,7 +91,8 @@ ${paid ? `<li>We'll repair and animate your photos and set them to music.</li>
 <p style="margin:0 0 8px">When you ordered, you asked us to start your film straight away and confirmed you understand that you lose your right to cancel once your film is finished. You can cancel for a full refund before we start, or for a partial refund while we're working on it. To cancel, simply reply to this email with your name, order ref <strong>${esc(ref)}</strong> and the date of your order.</p>
 <p style="margin:0 0 8px">If you're not happy with your film, tell us within 14 days and we'll redo it. If it still isn't right, we'll refund you. This doesn't affect your legal rights.</p>
 <p style="margin:0">Full details: <a href="${BUSINESS.site}/terms.html" style="color:#8a5a3b">Terms</a> &middot; <a href="${BUSINESS.site}/privacy.html" style="color:#8a5a3b">Privacy Policy</a></p>
-<p style="margin-top:20px">Any questions, just reply to this email.</p>
+<p style="margin-top:20px"><strong>Invite a friend:</strong> share your personal link below. Your friend gets £5 off their first film, and when they order, you get £5 off your next one.<br><a href="${BUSINESS.site}/?ref=${encodeURIComponent(ref)}&amp;from=${encodeURIComponent(firstName)}" style="color:#8a5a3b">${BUSINESS.site.replace("https://", "")}/?ref=${esc(ref)}</a></p>
+<p>Any questions, just reply to this email.</p>
 <p>Warm wishes,<br>The Memory Project</p>`);
 
   const transporter = nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
