@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Thank you – The Memory Project</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/fonts.css">
 <style>
 body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f7f1e6;color:#2b2420;font-family:Inter,system-ui,sans-serif;text-align:center;padding:24px;box-sizing:border-box}
@@ -53,6 +54,11 @@ a{display:inline-block;background:#8a5a3b;color:#fff;text-decoration:none;paddin
   if(navigator.share){ var s=document.getElementById('share-sms'); s.textContent='Share'; s.href='#'; s.onclick=function(e){e.preventDefault(); navigator.share({title:'The Memory Project',text:msg}).catch(function(){});}; }
   document.getElementById('invite').hidden=false;
 })();
+if(new URLSearchParams(location.search).get('voucher')){
+  document.querySelector('h1').textContent='Thank you, what a lovely gift.';
+  document.getElementById('msg').textContent="Your payment went through. We'll email your gift voucher code within 24 hours, ready to print or forward. Stripe will email you a receipt.";
+  try{localStorage.removeItem('tmp_order');}catch(_){}
+}
 if(new URLSearchParams(location.search).get('plan')==='custom'){
   document.getElementById('msg').textContent="We've got your Custom Film request. We'll email you within one working day with a quote and a secure payment link. Your film arrives within 5 days of payment.";
 }

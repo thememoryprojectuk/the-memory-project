@@ -54,7 +54,7 @@ async function sendOrderEmails({ d, photos, ref, paid, stripeId }) {
     row("Payment", paid ? "Paid by card" : "Quote to follow") +
     row("Photos received", String(photos.length)) +
     row("Occasion", occasion) +
-    row("Needed by", fmtDate(d["needed-by"])) +
+    row("Priority", d.priority) +
     row("Black and white photos", d["black-and-white"] || "No preference") +
     row("Film title", d["film-title"]) +
     row("Message", d.message) +
@@ -73,7 +73,7 @@ async function sendOrderEmails({ d, photos, ref, paid, stripeId }) {
 ${row("Name", d.name)}${row("Email", d.email)}${details}${stripeId ? row("Stripe payment", stripeId) : ""}
 </table>
 <p style="margin-top:16px"><strong>Photos:</strong><br>${photoLinks}</p>
-<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${paid ? "make the film and email it within 5 days." : "send a quote and payment link within 1 working day."}${d["referred-by"] ? "<br><strong>Referral:</strong> this customer was referred by " + esc(d["referred-by"]) + ". Once paid, send that person a single-use £5 code for their next film." : ""}</p>`);
+<p style="font-size:13px;color:#6b5f55">Customer agreed to the Terms, asked you to start straight away, and confirmed photo permission and age 18+.<br>Reply to this email to contact the customer directly.<br><strong>To do:</strong> ${paid ? (d.priority ? "PRIORITY: make the film and email it within 48 hours." : "make the film and email it within 5 days.") : "send a quote and payment link within 1 working day."}${d["referred-by"] ? "<br><strong>Referral:</strong> this customer was referred by " + esc(d["referred-by"]) + ". Once paid, send that person a single-use £5 code for their next film." : ""}</p>`);
 
   const custHtml = wrap(`
 <p>Hi ${esc(firstName)},</p>
@@ -83,7 +83,7 @@ ${row("Name", d.name)}${row("Email", d.email)}${details}${stripeId ? row("Stripe
 <h3 style="font-family:Georgia,serif;margin:20px 0 6px">What happens next</h3>
 <ol style="padding-left:20px;margin:0">
 ${paid ? `<li>We'll repair and animate your photos and set them to music.</li>
-<li>Your film arrives by email within 5 days.</li>` : `<li>Within one working day we'll email you a quote and a secure payment link.</li>
+<li>Your film arrives by email within ${d.priority ? "48 hours (Priority)" : "5 days"}.</li>` : `<li>Within one working day we'll email you a quote and a secure payment link.</li>
 <li>Once you've paid, we'll repair and animate your photos and set them to music.</li>
 <li>Your film arrives by email within 5 days of payment.</li>`}
 </ol>
@@ -100,7 +100,7 @@ ${paid ? `<li>We'll repair and animate your photos and set them to music.</li>
   const results = await Promise.allSettled([
     transporter.sendMail({
       from, to: notifyTo, replyTo: d.email || undefined,
-      subject: `${paid ? "PAID order" : "Quote request"} ${ref}: ${d.plan || "film"} from ${d.name || "customer"}`,
+      subject: `${d.priority ? "⚡ PRIORITY " : ""}${paid ? "PAID order" : "Quote request"} ${ref}: ${d.plan || "film"} from ${d.name || "customer"}`,
       html: alertHtml,
     }),
     d.email
@@ -113,4 +113,32 @@ ${paid ? `<li>We'll repair and animate your photos and set them to music.</li>
   return true;
 }
 
-module.exports = { esc, row, wrap, fileUrl, BUSINESS, sendOrderEmails };
+// Gift voucher sold: tell the business to create a code, and thank the buyer.
+async function sendVoucherEmails({ kind, buyer, email, recipient, amount, stripeId }) {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) { console.error("GMAIL_USER / GMAIL_APP_PASSWORD not set"); return false; }
+  const notifyTo = process.env.NOTIFY_TO || user;
+  const film = kind === "FAMILY" ? "Family Film (15 photos)" : "Memory Film (5 photos)";
+  const first = String(buyer || "").trim().split(/\s+/)[0] || "there";
+  const alertHtml = wrap(`
+<h2 style="font-family:Georgia,serif;margin:0 0 12px">🎁 Gift voucher sold: ${esc(film)}</h2>
+<table style="border-collapse:collapse;font-size:15px">${row("Buyer", buyer)}${row("Email", email)}${row("Recipient", recipient)}${row("Paid", amount)}${row("Stripe payment", stripeId)}</table>
+<p style="margin-top:16px"><strong>To do (within 24 hours):</strong> in Stripe, open the "Gift voucher – ${kind === "FAMILY" ? "Family" : "Memory"} Film" coupon, add a new promotion code (e.g. GIFT-${kind}-XXXX), limit it to 1 redemption and set it to expire in 12 months. Then reply to this email with the code.</p>`);
+  const custHtml = wrap(`
+<p>Hi ${esc(first)},</p>
+<p>Thank you for buying a <strong>${esc(film)}</strong> gift voucher${recipient ? " for " + esc(recipient) : ""}. 🎁</p>
+<p>We'll email your voucher code <strong>within 24 hours</strong>. Pass it on with a card or message, and they can use it at <a href="${BUSINESS.site}" style="color:#8a5a3b">${BUSINESS.site.replace("https://", "")}</a> to order their film with their own photos. The code is valid for 12 months.</p>
+<p>Any questions, just reply to this email.</p>
+<p>Warm wishes,<br>The Memory Project</p>`);
+  const transporter = nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
+  const from = `"The Memory Project" <${user}>`;
+  const results = await Promise.allSettled([
+    transporter.sendMail({ from, to: notifyTo, replyTo: email || undefined, subject: `🎁 GIFT VOUCHER sold: ${film} for ${recipient || "someone"} (from ${buyer || email || "customer"})`, html: alertHtml }),
+    email ? transporter.sendMail({ from, to: email, replyTo: user, subject: "Your Memory Project gift voucher", html: custHtml }) : Promise.resolve("no email"),
+  ]);
+  results.forEach((r, i) => { if (r.status === "rejected") console.error(i === 0 ? "Voucher alert failed:" : "Voucher customer email failed:", r.reason); });
+  return true;
+}
+
+module.exports = { esc, row, wrap, fileUrl, BUSINESS, sendOrderEmails, sendVoucherEmails };

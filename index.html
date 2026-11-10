@@ -7,7 +7,9 @@
 <meta name="description" content="We turn your old family photos into a short, moving film with music. A gift they'll watch again and again. Made in Bristol.">
 <meta property="og:title" content="The Memory Project – See them smile again">
 <meta property="og:description" content="Your old family photos, turned into a short, moving film with music.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:image" content="https://thememoryprojectuk.netlify.app/logo-256.png">
 <link rel="stylesheet" href="/fonts.css">
 <style>
 :root{
@@ -109,6 +111,19 @@ textarea{min-height:96px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .hint{font-size:.88rem;color:var(--muted);margin-top:6px}
 .req{color:#a33;font-weight:700;margin-left:2px}
+.check.prio{margin:2px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff}
+
+.heard{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);width:min(440px,calc(100% - 24px));background:#fffaf1;border:1px solid #e4d8c6;border-radius:16px;box-shadow:0 18px 50px rgba(40,25,10,.25);padding:18px 18px 14px;z-index:50;transition:transform .35s ease}
+.heard.show{transform:translate(-50%,0)}
+.heard h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.35rem;margin:0 28px 4px 0}
+.heard p{margin:0 0 12px;font-size:.9rem;color:var(--muted)}
+.heard .opts{display:flex;flex-wrap:wrap;gap:8px}
+.heard .opts button{font:500 .9rem Inter,system-ui,sans-serif;padding:8px 13px;border-radius:999px;border:1px solid #d9c7ae;background:#fff;color:#2b2420;cursor:pointer}
+.heard .opts button:hover{border-color:#8a5a3b;color:#8a5a3b}
+.heard .x{position:absolute;top:10px;right:10px;width:30px;height:30px;border:0;background:none;font-size:20px;color:#8a7a6a;cursor:pointer}
+.heard .thanks{font-size:.95rem;color:#2f6a3b;margin:4px 0 2px}
+@media (prefers-reduced-motion:reduce){.heard{transition:none}}
+.promise{background:#eef3ec;border:1px solid #cfdcc9;color:#2f4a2a;border-radius:10px;padding:12px 14px;font-size:.92rem;line-height:1.5;margin:0 0 16px}
 .field.bad input,.field.bad select,.field.bad textarea,.dropzone.bad{border-color:#a33!important;box-shadow:0 0 0 3px rgba(170,51,51,.15)}
 .check.bad span{color:#a33}
 .form-errors{background:#fbecea;border:1px solid #e3b4ae;color:#7a2a22;border-radius:10px;padding:14px 16px;margin:4px 0 16px;font-size:.95rem;line-height:1.5}
@@ -168,6 +183,115 @@ footer p{color:var(--muted);font-size:.95rem}
   header .btn{padding:8px 14px}
   .logo{font-size:1.2rem}
 }
+
+/* ---- warmth & polish ---- */
+body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .32 0 0 0 0 .2 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero{background:radial-gradient(ellipse 80% 70% at 50% 0%,#fbe9cf 0%,rgba(251,233,207,0) 70%),radial-gradient(ellipse 60% 50% at 50% 100%,#f0dcc2 0%,rgba(240,220,194,0) 70%)}
+section h2+.steps,section h2+.plans{margin-top:44px}
+.center h2::after,.center > h2::after{content:"";display:block;width:64px;height:12px;margin:14px auto 0;background:radial-gradient(circle,var(--gold) 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(var(--gold),var(--gold)) left center/24px 1px no-repeat,linear-gradient(var(--gold),var(--gold)) right center/24px 1px no-repeat}
+.order h2::after{background:radial-gradient(circle,var(--gold) 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(var(--gold),var(--gold)) left center/24px 1px no-repeat,linear-gradient(var(--gold),var(--gold)) right center/24px 1px no-repeat}
+.howto{background:linear-gradient(180deg,#f2e6d4,#f6ecdd)}
+.step .n{width:52px;height:52px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.7rem;background:#fffaf1}
+.step{box-shadow:0 10px 28px rgba(110,69,41,.07)}
+.btn{box-shadow:0 6px 16px rgba(110,69,41,.18)}.btn.ghost{box-shadow:none}
+.plan.pop{background:linear-gradient(180deg,#fff,#fff8ee)}
+footer{background:var(--ink);color:#e9dcc6;border-top:0;padding:52px 0 40px}
+footer .logo{color:#f7f1e6}footer p{color:#cbbda9}footer nav a{color:var(--gold)}
+.brandmark{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:block;box-shadow:0 0 0 3px rgba(196,154,90,.35)}
+/* contact & feedback */
+.talk{display:grid;gap:18px;margin-top:36px;text-align:left}
+@media(min-width:760px){.talk{grid-template-columns:1fr 1fr}}
+.talk .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 10px 28px rgba(110,69,41,.06)}
+.talk h3{font-size:1.5rem;margin-bottom:6px}.talk p{color:var(--muted);font-size:.97rem}
+.talk .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.talk .links a{padding:10px 16px;border-radius:999px;border:1px solid var(--sepia);color:var(--sepia);text-decoration:none;font-weight:600;font-size:.95rem}
+.rate{display:flex;gap:8px;margin:12px 0}
+.rate label{cursor:pointer;position:relative}.rate input{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.rate span{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);font-size:1.4rem;background:#fff;transition:transform .15s}
+.rate input:checked+span{border-color:var(--sepia);box-shadow:0 0 0 3px rgba(138,90,59,.18);transform:scale(1.08)}
+.rate input:focus-visible+span{outline:2px solid var(--sepia)}
+.talk textarea,.talk input[type=email]{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-top:8px}
+.talk textarea{min-height:84px;resize:vertical}
+.talk button{margin-top:12px}
+.fb-done{color:#2f6a3b;font-weight:600;margin-top:10px}
+.talk form{max-width:none;margin:0;padding:0;background:none;border-radius:0}
+.talk form .btn{width:auto;padding:12px 22px;font-size:1rem}
+
+/* ---- light header and hero, green streak ---- */
+header{background:rgba(255,250,241,.95)!important;border-bottom:1px solid var(--line);box-shadow:inset 0 3px 0 var(--blue)}
+header .logo{color:var(--ink)}
+.logo-img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 2px rgba(196,154,90,.45)}
+.hero{background:radial-gradient(ellipse 80% 60% at 50% 0%,#fbe9cf 0%,rgba(251,233,207,0) 70%),linear-gradient(180deg,#fbf4e8 0%,#f4e8d6 100%);color:var(--ink)}
+.hero .eyebrow{color:var(--blue)!important}
+.hero h1 em{color:var(--blue)}
+.hero p.lead{color:var(--muted)}
+.hero .photo{box-shadow:0 18px 36px rgba(110,69,41,.25)}
+.badge{background:var(--gold)!important;color:#1a1612}
+.plan.pop{border-color:var(--gold)}
+
+/* ---- blue accents (from the logo) ---- */
+:root{--blue:#2d5a43;--blue-soft:#e5efe7}
+main section:not(.hero):not(.order) .eyebrow{color:var(--blue)}
+.center h2::after,.center > h2::after{background:radial-gradient(circle,var(--blue) 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(var(--gold),var(--gold)) left center/24px 1px no-repeat,linear-gradient(var(--gold),var(--gold)) right center/24px 1px no-repeat}
+.step .n{border-color:var(--blue);color:var(--blue)}
+summary::after{color:var(--blue)}
+.check.prio{border-color:#c8dccd;background:var(--blue-soft)}
+.example{background:linear-gradient(180deg,var(--paper),#eef3ee)}
+.talk .links a:nth-child(2){border-color:var(--blue);color:var(--blue)}
+/* payment methods */
+.pay-ways{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.pay-ways span{font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:6px;background:#fff;border:1px solid var(--line);color:#3a332d}
+.pay-ways .klarna{background:#ffb3c7;border-color:#ffb3c7;color:#17120f}
+.pay-note{font-size:.85rem;color:var(--muted);margin-top:8px}
+/* photo tips */
+.tips{margin-top:12px;border:1px solid #c8dccd;background:var(--blue-soft);border-radius:10px;padding:10px 14px;text-align:left}
+.tips summary{font-family:var(--sans);font-size:.95rem;font-weight:600;color:#24473a}
+.tips summary::after{color:var(--blue)}
+.tips ul{margin:10px 0 2px 18px;font-size:.92rem;color:#3a3530}
+.tips li{margin:4px 0}
+.tips[open]{padding-bottom:12px}
+/* sticky order bar (phones) */
+.sticky-order{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(255,250,241,.97);border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(110,69,41,.10);display:flex;align-items:center;justify-content:space-between;gap:12px;transform:translateY(110%);transition:transform .3s ease;color:var(--ink);font-size:.92rem}
+.sticky-order.show{transform:none}
+.sticky-order .btn{padding:11px 20px;box-shadow:none}
+@media(min-width:760px){.sticky-order{display:none}}
+@media(max-width:759px){.heard{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
+/* reviews */
+.reviews{display:grid;gap:16px;margin-top:32px;text-align:left}
+@media(min-width:760px){.reviews{grid-template-columns:repeat(3,1fr)}}
+.review{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px}
+.review .stars{color:var(--gold);letter-spacing:2px}
+.review blockquote{font-family:var(--serif);font-size:1.25rem;line-height:1.35;margin:8px 0 12px}
+.review cite{font-style:normal;font-size:.9rem;color:var(--muted)}
+
+/* more blue */
+.step .n{background:var(--blue);color:#f7f1e6;border-color:var(--blue)}
+.plan li::before{border-color:var(--blue)}
+.gift{background:linear-gradient(180deg,#1f3b2d,#2d5a43);color:#f2ede4}
+.gift .eyebrow{color:#e2b878!important}.gift h2{color:#fff}.gift .sub{color:#d6e2d8;max-width:560px;margin:10px auto 0}
+.gift h2::after{background:radial-gradient(circle,#e2b878 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(#e2b878,#e2b878) left center/24px 1px no-repeat,linear-gradient(#e2b878,#e2b878) right center/24px 1px no-repeat!important}
+.vouchers{display:grid;gap:16px;margin-top:30px}
+@media(min-width:760px){.vouchers{grid-template-columns:1fr 1fr;max-width:760px;margin-left:auto;margin-right:auto}}
+.voucher{position:relative;background:#fffaf1;color:var(--ink);border-radius:16px;padding:24px 22px;text-align:left;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.voucher::before{content:"";position:absolute;top:0;bottom:0;right:84px;border-left:2px dashed #e4d8c6}
+.voucher h3{font-size:1.5rem;margin-bottom:4px;padding-right:96px}
+.voucher p{color:var(--muted);font-size:.93rem;padding-right:96px}
+.voucher .v-price{position:absolute;top:22px;right:12px;width:62px;text-align:center;font-family:var(--serif);font-size:1.45rem;font-weight:600;color:var(--blue)}
+.voucher .btn{margin-top:14px;background:var(--blue);border-color:var(--blue);color:#fff}
+.voucher .btn:hover{background:#1f4231;border-color:#1f4231}
+.gift .small{color:#c9d8cc;font-size:.88rem;margin-top:18px}
+
+/* Streak of colour: green top edges, gold highlight, green buttons */
+h2 .hl{font-style:italic;background:linear-gradient(transparent 58%,#e9c88e 58%,#e9c88e 90%,transparent 90%);padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.order h2 .hl{color:#f1cf94;background:linear-gradient(transparent 62%,rgba(233,200,142,.22) 62%,rgba(233,200,142,.22) 90%,transparent 90%)}
+.step,.plan,.talk .card,.order form{border-top:5px solid var(--blue)}
+.plan.pop{border-color:var(--blue);border-top-width:5px}
+.btn{background:var(--blue);border-color:var(--blue);box-shadow:0 6px 16px rgba(31,59,45,.2)}
+.btn:hover{background:#1f4231;border-color:#1f4231}
+.btn.ghost{background:transparent;color:var(--blue);border-color:var(--blue);box-shadow:none}
+.btn.ghost:hover{background:var(--blue);color:#fff}
+.talk .links a{border-color:var(--blue);color:var(--blue)}
+.heard .opts button:hover{border-color:var(--blue);color:var(--blue)}
 </style>
 </head>
 <body>
@@ -175,7 +299,7 @@ footer p{color:var(--muted);font-size:.95rem}
 <header>
   <div class="wrap">
     <a href="#" class="logo" aria-label="The Memory Project home">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="5" width="26" height="22" rx="2" fill="none" stroke="#8a5a3b" stroke-width="2"/><circle cx="16" cy="14" r="4.5" fill="#c49a5a"/><path d="M7 25c2-5 5.5-7 9-7s7 2 9 7" fill="none" stroke="#8a5a3b" stroke-width="2"/></svg>
+      <img src="/logo-128.png" alt="" class="logo-img" width="38" height="38">
       The Memory Project
     </a>
     <a href="#order" class="btn">Order a film</a>
@@ -208,16 +332,24 @@ footer p{color:var(--muted);font-size:.95rem}
     <p class="eyebrow">An example</p>
     <h2>Sample film</h2>
     <div class="film">
-      <iframe src="https://www.youtube-nocookie.com/embed/QbaF1J_IIBo?rel=0" title="The Memory Project example film" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      <iframe src="https://www.youtube-nocookie.com/embed/iFlS4PXXrTU?rel=0" title="The Memory Project example film" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
     </div>
     <p class="caption">An old family photo, brought back to life.</p>
   </div>
 </section>
 
-<section class="center">
+<section class="center" id="reviews" hidden>
+  <div class="wrap">
+    <p class="eyebrow">Kind words</p>
+    <h2>What families say</h2>
+    <div class="reviews" id="review-list"></div>
+  </div>
+</section>
+
+<section class="center howto">
   <div class="wrap">
     <p class="eyebrow">How it works</p>
-    <h2>Three simple steps</h2>
+    <h2>Three <em class="hl">simple</em> steps</h2>
     <div class="steps">
       <div class="step"><div class="n">1</div><h3>Choose your photos</h3><p>Pick your favourite family photos. A photo of a photo, taken on your phone, is fine.</p></div>
       <div class="step"><div class="n">2</div><h3>We bring them to life</h3><p>Each photo is repaired, gently animated and set to music, with names and a message of your choosing.</p></div>
@@ -229,19 +361,19 @@ footer p{color:var(--muted);font-size:.95rem}
 <section class="pricing center" id="prices">
   <div class="wrap">
     <p class="eyebrow">Choose a film</p>
-    <h2>Simple prices, nothing extra</h2>
+    <h2>Simple prices</h2>
     <div class="plans">
       <div class="plan">
         <h3>Memory Film</h3>
         <div class="price">£24.99</div>
-        <ul><li>5 photos, repaired and animated</li><li>Choose from our music library</li><li>Your own title and message</li></ul>
+        <ul><li>5 photos, repaired and animated</li><li>Set to music that suits your photos</li><li>Your own title and message</li></ul>
         <a href="#order" class="btn ghost" data-plan="Memory Film – £24.99">Choose</a>
       </div>
       <div class="plan pop">
         <span class="badge">Most popular</span>
         <h3>Family Film</h3>
         <div class="price">£44.99</div>
-        <ul><li>15 photos, repaired and animated</li><li>Choose from our music library</li><li>Your own title and message</li></ul>
+        <ul><li>15 photos, repaired and animated</li><li>Set to music that suits your photos</li><li>Your own title and message</li></ul>
         <a href="#order" class="btn" data-plan="Family Film – £44.99">Choose</a>
       </div>
       <div class="plan">
@@ -251,6 +383,7 @@ footer p{color:var(--muted);font-size:.95rem}
         <a href="#order" class="btn ghost" data-plan="Custom Film – from £59.99">Ask about a custom film</a>
       </div>
     </div>
+    <p class="hint center" style="margin-top:18px">Need it sooner? Add <strong>Priority</strong> when you order and get your film within 48 hours for £7.99.</p>
   </div>
 </section>
 
@@ -287,11 +420,11 @@ footer p{color:var(--muted);font-size:.95rem}
         <div class="field"><label for="email">Your email <span class="req" aria-hidden="true">*</span></label><input id="email" type="email" name="email" autocomplete="email" required></div>
       </div>
       <div class="row">
-        <div class="field"><label for="occasion">Occasion <span class="opt">(optional)</span></label>
+        <div class="field"><label for="occasion">Occasion</label>
           <select id="occasion" name="occasion"><option value="">Choose…</option><option>Christmas</option><option>Birthday</option><option>Anniversary</option><option>Mother's Day</option><option>Family reunion</option><option>In loving memory</option><option>Something else</option></select>
           <input id="occasion-other" name="occasion-other" class="hidden" placeholder="Tell us the occasion" style="margin-top:10px">
         </div>
-        <div class="field"><label for="needed-by">Needed by <span class="opt">(optional)</span></label><input id="needed-by" type="date" name="needed-by"><p class="hint">Your film arrives within 5 days of payment, so please choose a date at least 7 days away.</p></div>
+        <div class="field" id="priority-field"><label>Delivery</label><label class="check prio"><input type="checkbox" id="priority" name="priority" value="Yes – within 48 hours"><span>⚡ <strong>Priority:</strong> your film within 48 hours <strong>(+£7.99)</strong></span></label><p class="hint">Otherwise your film arrives within 5 days of payment.</p></div>
       </div>
       <div class="field">
         <label for="photo-picker">Your photos <span class="req" aria-hidden="true">*</span></label>
@@ -301,35 +434,45 @@ footer p{color:var(--muted);font-size:.95rem}
         </div>
         <div class="thumbs" id="thumbs"></div>
         <p class="hint" id="photo-status">Photos taken on your phone of old prints are perfect.</p>
+        <details class="tips"><summary>📷 Tips for photographing old prints</summary><ul>
+          <li>Take the photo out of its frame or album sleeve to avoid glare.</li>
+          <li>Lay it flat near a window in daylight. Don't use the flash.</li>
+          <li>Hold your phone directly above it so the photo looks square, not slanted.</li>
+          <li>Fill the screen with the photo and tap on the faces to focus.</li>
+          <li>Give your camera lens a quick wipe first. It makes a big difference.</li>
+        </ul></details>
         <p class="hint">Your photos appear in the film in this order. Use the arrows to move them.</p>
         <div class="hidden" aria-hidden="true"><input type="file" name="photo1" accept="image/*"><input type="file" name="photo2" accept="image/*"><input type="file" name="photo3" accept="image/*"><input type="file" name="photo4" accept="image/*"><input type="file" name="photo5" accept="image/*"><input type="file" name="photo6" accept="image/*"><input type="file" name="photo7" accept="image/*"><input type="file" name="photo8" accept="image/*"><input type="file" name="photo9" accept="image/*"><input type="file" name="photo10" accept="image/*"><input type="file" name="photo11" accept="image/*"><input type="file" name="photo12" accept="image/*"><input type="file" name="photo13" accept="image/*"><input type="file" name="photo14" accept="image/*"><input type="file" name="photo15" accept="image/*"></div>
       </div>
-      <div class="field"><label for="bw">Black and white photos <span class="opt">(optional)</span></label>
+      <div class="field"><label for="bw">Black and white photos</label>
         <select id="bw" name="black-and-white">
           <option value="" selected>No preference – you choose</option>
           <option>Keep them black and white</option>
           <option>Bring them to life in colour</option>
+          <option>N/A – all my photos are in colour</option>
         </select>
         <p class="hint">Every photo is repaired either way. This only changes black and white photos. Colourisation is an artistic interpretation, so colours may not exactly match real life.</p></div>
-      <div class="field"><label for="names">Film title <span class="opt">(optional)</span></label><input id="names" name="film-title" maxlength="60" placeholder="e.g. Joan &amp; Ted – 60 years together"><p class="hint">Shown at the start of your film. Up to 60 characters.</p></div>
-      <div class="field"><label for="message">Your message <span class="opt">(optional)</span></label><textarea id="message" name="message" placeholder="e.g. Happy 60th anniversary, with all our love"></textarea><p class="hint">Shown at the end of your film. <span id="msg-count">0 / 30 words</span></p></div>
-      <div class="field"><label for="music">Music <span class="opt">(optional)</span></label>
+      <div class="field"><label for="names">Film title</label><input id="names" name="film-title" maxlength="60" placeholder="e.g. Joan &amp; Ted – 60 years together"><p class="hint">Shown at the start of your film. Up to 60 characters.</p></div>
+      <div class="field"><label for="message">Your message</label><textarea id="message" name="message" placeholder="e.g. Happy 60th anniversary, with all our love"></textarea><p class="hint">Shown at the end of your film. <span id="msg-count">0 / 30 words</span></p></div>
+      <div class="field"><label for="music">Music</label>
         <select id="music" name="music">
-          <option value="" selected>No preference – you choose</option><option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Soft and reflective (in loving memory)</option>
+          <option value="" selected>No preference – you choose</option><option>Gentle piano</option><option>Warm strings</option><option>Acoustic guitar</option><option>Nostalgic 1950s–60s style</option><option>Uplifting and joyful</option><option>Fun and upbeat</option><option>Christmas</option><option>Soft and reflective (in loving memory)</option>
         </select>
         <p class="hint">All our music is licensed for your film.</p></div>
-      <div class="field"><label for="avoid">Anything we should avoid? <span class="opt">(optional)</span></label><textarea id="avoid" name="avoid" placeholder="e.g. Please don't animate Grandad, just Nan"></textarea></div>
+      <div class="field"><label for="avoid">Anything we should avoid?</label><textarea id="avoid" name="avoid" placeholder="e.g. Please keep the last photo still"></textarea></div>
       <div class="row">
-        <div class="field"><label for="heard-about">How did you hear about us? <span class="opt">(optional)</span></label>
+        <div class="field"><label for="heard-about">How did you hear about us?</label>
           <select id="heard-about" name="heard-about"><option value="">Choose…</option><option>Facebook</option><option>TikTok</option><option>Nextdoor</option><option>Etsy</option><option>Newsletter</option><option>Friends or family</option><option>Google</option><option>Other</option></select></div>
-        <div class="field"><label for="referred-by">Referred by a friend? <span class="opt">(optional)</span></label><input id="referred-by" name="referred-by" placeholder="Their name or email"><p class="hint">They'll get £5 off their next film as a thank you.</p></div>
+        <div class="field"><label for="referred-by">Referred by a friend?</label><input id="referred-by" name="referred-by" placeholder="Their name or email"><p class="hint">They'll get £5 off their next film as a thank you.</p></div>
       </div>
       <div class="note" id="order-note">Next you'll pay securely by card with Stripe, and your order is sent to us once payment goes through. For a Custom Film, we'll email you a quote and payment link within a day instead. Your film arrives within 5 days of payment. Having trouble uploading? Email us at <a href="mailto:thememoryprojectteam@gmail.com">thememoryprojectteam@gmail.com</a> and we'll help.</div>
+      <div class="promise"><strong>🔒 Your photos are safe with us.</strong> We use AI tools to bring your photos to life. Your photos are never used to train AI models, and we delete them 30 days after your film is delivered.</div>
       <label class="check"><input type="checkbox" name="photo-permission" id="photo-permission" value="yes" required><span>I'm 18 or over. My photos are of my own family or friends (no celebrities or strangers), and I own them or have permission to use them. <span class="req" aria-hidden="true">*</span></span></label>
       <label class="check"><input type="checkbox" name="terms-and-start-now" id="terms-and-start-now" value="yes" required><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and have read the <a href="/privacy.html" target="_blank">Privacy Policy</a>. I ask you to start my film straight away, and understand I lose my right to cancel once it's finished. <span class="req" aria-hidden="true">*</span></span></label>
       <div class="form-errors" id="form-errors" role="alert" tabindex="-1" hidden></div>
       <button type="submit" class="btn" id="submit-btn">Continue to payment</button>
-      <p class="hint center">Have a discount code? You can add it on the payment page.</p>
+      <div class="pay-ways" aria-label="Ways to pay"><span>🔒 Card</span><span>Apple Pay</span><span class="klarna">Klarna · pay later</span><span>Amazon Pay</span><span>Revolut Pay</span></div>
+      <p class="hint center pay-note">Secure checkout by Stripe. Have a discount code? Add it on the payment page.</p>
       <p class="hint center" id="submit-status" role="status"></p>
     </form>
   </div>
@@ -341,21 +484,80 @@ footer p{color:var(--muted);font-size:.95rem}
     <div class="faq">
       <details><summary>What kind of photos work best?</summary><p>Any photo where faces are clear works well, in colour or black and white. Old prints are fine: lay them flat by a window and take a photo with your phone.</p></details>
       <details><summary>How will I receive my film?</summary><p>We email you a link to watch and download it. It plays on any phone, tablet, computer or smart TV, and you can forward it to family.</p></details>
-      <details><summary>How long does it take?</summary><p>Within 5 days of your order. For Christmas, order by 15 December and it arrives by 20 December.</p></details>
+      <details><summary>How long does it take?</summary><p>Within 5 days of your order, or within 48 hours if you add Priority (+£7.99). For Christmas, order by 15 December and it arrives by 20 December.</p></details>
       <details><summary>Are my photos kept private?</summary><p>Your photos are only used to make your film. We delete them 30 days after your film is delivered. See our <a href="/privacy.html">Privacy Policy</a> for full details.</p></details>
-      <details><summary>How do you bring the photos to life?</summary><p>We use AI tools to repair and gently animate each photo, then a person checks every film and edits it together with your music, names and message before it's sent.</p></details>
+      <details><summary>How do you bring the photos to life?</summary><p>We use AI tools to repair and gently animate each photo, then a person checks every film and edits it together with your music, names and message before it's sent. Your photos are never used to train AI models, and we delete them 30 days after your film is delivered.</p></details>
+      <details><summary>Can I give it as a gift?</summary><p>Yes. Order the film yourself with their photos, or buy a <a href="#gift">gift voucher</a> so they can choose their own photos. Voucher codes are emailed within 24 hours and last 12 months.</p></details>
       <details><summary>What if I'm not happy with it?</summary><p>Tell us and we'll redo it. If it still isn't right, we'll refund you.</p></details>
     </div>
   </div>
 </section>
+<section class="center gift" id="gift">
+  <div class="wrap">
+    <p class="eyebrow">Give it as a gift</p>
+    <h2>Gift vouchers 🎁</h2>
+    <p class="sub">Don't have the photos? Give a voucher. They choose their favourite photos and order whenever they're ready.</p>
+    <div class="vouchers">
+      <div class="voucher"><span class="v-price">£24.99</span><h3>Memory Film voucher</h3><p>For a 5-photo film, set to music.</p><a class="btn" href="https://buy.stripe.com/fZu3co7G2aq6d49dnneIw05?client_reference_id=VOUCHER-MEMORY">Buy voucher</a></div>
+      <div class="voucher"><span class="v-price">£44.99</span><h3>Family Film voucher</h3><p>For a 15-photo film, set to music.</p><a class="btn" href="https://buy.stripe.com/28E28kbWifKq4xDdnneIw06?client_reference_id=VOUCHER-FAMILY">Buy voucher</a></div>
+    </div>
+    <p class="small">Your voucher code is emailed to you within 24 hours, ready to print or forward. Valid for 12 months.</p>
+  </div>
+</section>
+
+<section class="center" id="contact" style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">We'd love to hear from you</p>
+    <h2>Questions or ideas?</h2>
+    <div class="talk">
+      <div class="card">
+        <h3>Get in touch</h3>
+        <p>Not sure which film to choose, or have a question about your photos? We usually reply within a day.</p>
+        <div class="links"><a href="mailto:thememoryprojectteam@gmail.com">✉️ Email us</a><a href="https://m.me/thememoryprojectco" target="_blank" rel="noopener">💬 Message on Facebook</a></div>
+        <p style="margin-top:12px;font-size:.9rem">thememoryprojectteam@gmail.com</p>
+      </div>
+      <div class="card">
+        <h3>Help us improve</h3>
+        <p>How was your visit? Tell us anything, good or bad. It takes 10 seconds.</p>
+        <form name="feedback" id="feedback-form" method="POST" data-netlify="true" netlify-honeypot="website">
+          <input type="hidden" name="form-name" value="feedback">
+          <p class="hidden"><label>Leave this empty: <input name="website"></label></p>
+          <div class="rate" role="radiogroup" aria-label="How was your visit?">
+            <label><input type="radio" name="rating" value="Great"><span aria-hidden="true">😍</span><b class="hidden">Great</b></label>
+            <label><input type="radio" name="rating" value="Good"><span aria-hidden="true">🙂</span><b class="hidden">Good</b></label>
+            <label><input type="radio" name="rating" value="Okay"><span aria-hidden="true">😐</span><b class="hidden">Okay</b></label>
+            <label><input type="radio" name="rating" value="Not great"><span aria-hidden="true">🙁</span><b class="hidden">Not great</b></label>
+          </div>
+          <label for="fb-msg" class="hidden">Your feedback</label>
+          <textarea id="fb-msg" name="message" placeholder="What could we do better? What did you like?"></textarea>
+          <label for="fb-email" class="hidden">Your email</label>
+          <input id="fb-email" type="email" name="email" placeholder="Your email, if you'd like a reply">
+          <button type="submit" class="btn">Send feedback</button>
+          <p class="fb-done" id="fb-done" hidden>Thank you, that really helps! 🤍</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
+<div class="sticky-order" id="sticky-order"><span>Films from <strong>£24.99</strong></span><a href="#order" class="btn">Order a film</a></div>
+<div class="heard" id="heard" role="dialog" aria-label="How did you hear about us?" hidden>
+  <button type="button" class="x" id="heard-x" aria-label="Close">×</button>
+  <div id="heard-ask">
+    <h3>Quick question</h3>
+    <p>How did you hear about us? It helps a small family business a lot.</p>
+    <div class="opts" id="heard-opts"></div>
+  </div>
+  <p class="thanks" id="heard-thanks" hidden>Thank you! 🤍</p>
+</div>
+
 
 <footer>
   <div class="wrap">
+    <img src="/logo-256.png" alt="The Memory Project logo" class="brandmark" width="72" height="72">
     <div class="logo">The Memory Project</div>
-    <p>Made in Bristol.</p>
-    <nav><a href="mailto:thememoryprojectteam@gmail.com">Contact us</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></nav>
-    <p class="legal">The Memory Project is a trading name of Luke Moore and Orlando Moore, trading in partnership, 8 Knightcott Road, Bristol BS8 3SB, United Kingdom.<br>Email: <a href="mailto:thememoryprojectteam@gmail.com">thememoryprojectteam@gmail.com</a></p>
+    <p>Family-run in Bristol.</p>
+    <nav><a href="#contact">Contact us</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/terms.html#about">Business details</a></nav>
   </div>
 </footer>
 
@@ -375,6 +577,68 @@ var invite=null;
   document.getElementById('invited-who').textContent=from||'A friend';
   document.getElementById('invited').hidden=false;
   var rb=document.getElementById('referred-by'); if(rb&&!rb.value) rb.value=(from?from+' ':'')+'(invite '+ref+')';
+})();
+
+// ----- "How did you hear about us?" pop-up (first visit only) -----
+(function(){
+  var box=document.getElementById('heard'), sel=document.getElementById('heard-about');
+  if(!box||!sel) return;
+  var saved=null; try{ saved=localStorage.getItem('tmp_heard'); }catch(_){}
+  if(saved){ sel.value=saved; return; }
+  var opts=document.getElementById('heard-opts');
+  [].slice.call(sel.options).forEach(function(o){
+    if(!o.value) return;
+    var b=document.createElement('button'); b.type='button'; b.textContent=o.value;
+    b.onclick=function(){ sel.value=o.value; try{localStorage.setItem('tmp_heard',o.value);}catch(_){}
+      document.getElementById('heard-ask').hidden=true; document.getElementById('heard-thanks').hidden=false; setTimeout(close,1200); };
+    opts.appendChild(b);
+  });
+  function close(){ box.classList.remove('show'); setTimeout(function(){box.hidden=true;},400); try{ if(!localStorage.getItem('tmp_heard')) localStorage.setItem('tmp_heard',''); localStorage.setItem('tmp_heard_seen','1'); }catch(_){} }
+  document.getElementById('heard-x').onclick=close;
+  var seen=null; try{ seen=localStorage.getItem('tmp_heard_seen'); }catch(_){}
+  if(seen) return;
+  setTimeout(function(){ if(sel.value) return; box.hidden=false; requestAnimationFrame(function(){ box.classList.add('show'); }); },5000);
+})();
+
+// ----- Feedback form -----
+(function(){
+  var f=document.getElementById('feedback-form'); if(!f) return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var fd=new FormData(f);
+    if(!fd.get('rating')&&!String(fd.get('message')||'').trim()){ document.getElementById('fb-msg').focus(); return; }
+    var btn=f.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
+    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fd).toString()})
+      .then(function(r){ if(!r.ok) throw 0; f.querySelectorAll('.rate,textarea,input[type=email],button').forEach(function(el){el.style.display='none';}); document.getElementById('fb-done').hidden=false; })
+      .catch(function(){ btn.disabled=false; btn.textContent='Send feedback'; alert('Sorry, that didn\'t send. Please try again or email us.'); });
+  });
+})();
+
+// ----- Reviews: add real customer reviews here (only genuine ones, with permission) -----
+var REVIEWS=[
+  // {text:"It made Mum cry, in the best way.", name:"Sarah", place:"Bath", film:"Family Film"},
+];
+(function(){
+  if(!REVIEWS.length) return;
+  var list=document.getElementById('review-list');
+  REVIEWS.slice(0,6).forEach(function(r){
+    var d=document.createElement('div'); d.className='review';
+    var st=document.createElement('div'); st.className='stars'; st.textContent='★★★★★'; st.setAttribute('aria-label','5 stars');
+    var q=document.createElement('blockquote'); q.textContent='“'+r.text+'”';
+    var c=document.createElement('cite'); c.textContent=r.name+(r.place?', '+r.place:'')+(r.film?' · '+r.film:'');
+    d.appendChild(st); d.appendChild(q); d.appendChild(c); list.appendChild(d);
+  });
+  document.getElementById('reviews').hidden=false;
+})();
+
+// ----- Sticky order bar on phones -----
+(function(){
+  var bar=document.getElementById('sticky-order'), hero=document.querySelector('.hero'), order=document.getElementById('order');
+  if(!bar||!('IntersectionObserver' in window)) return;
+  var heroOut=false, orderIn=false;
+  function upd(){ bar.classList.toggle('show', heroOut && !orderIn); }
+  new IntersectionObserver(function(e){ heroOut=!e[0].isIntersecting; upd(); }).observe(hero);
+  new IntersectionObserver(function(e){ orderIn=e[0].isIntersecting; upd(); },{rootMargin:'0px 0px -30% 0px'}).observe(order);
 })();
 
 // ----- Order form -----
@@ -414,6 +678,8 @@ var invite=null;
       photoStatus.style.color='';
     }
   }
+  function prioShow(){ var c=plan.value.indexOf('Custom')===0; document.getElementById('priority-field').style.display=c?'none':''; if(c) document.getElementById('priority').checked=false; }
+  plan.addEventListener('change',prioShow); document.querySelectorAll('[data-plan]').forEach(function(b){b.addEventListener('click',function(){setTimeout(prioShow,0);});});
   function btnLabel(){ submitBtn.textContent = plan.value.indexOf('Custom')===0 ? 'Ask for my quote' : 'Continue to payment'; }
   plan.addEventListener('change',update);
   plan.addEventListener('change',btnLabel);
@@ -498,12 +764,6 @@ var invite=null;
     if(on) other.focus(); else other.value='';
   });
 
-  // Needed-by date: at least 7 days from today
-  var nb=document.getElementById('needed-by'), d=new Date(); d.setDate(d.getDate()+7);
-  nb.min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  nb.addEventListener('input',function(){
-    nb.setCustomValidity(nb.value&&nb.value<nb.min?'Please choose a date at least 7 days from today.':'');
-  });
 
   // Clear, specific reasons when the form can't be sent
   var errBox=document.getElementById('form-errors');
@@ -514,7 +774,6 @@ var invite=null;
       case 'name': return 'Add your name.';
       case 'email': return v.valueMissing?'Add your email address, so we can send you your film.':'Check your email address. It doesn\'t look quite right (for example name@example.com).';
       case 'occasion-other': return 'Tell us the occasion, or choose one from the list.';
-      case 'needed-by': return 'Choose a "Needed by" date at least 7 days from today, or leave it blank.';
       case 'message': return 'Keep your message to 30 words or fewer.';
       case 'photo-permission': return 'Tick the box to confirm the photos are of your own family or friends and you\'re allowed to use them.';
       case 'terms-and-start-now': return 'Tick the box to agree to the Terms.';
@@ -572,8 +831,9 @@ var invite=null;
       clearTimeout(tm);
       if(!r.ok){ var er=new Error('status'); er.status=r.status; throw er; }
       var pv=document.getElementById('plan').value;
-      var pay={memory:'https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00',family:'https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01'};
+      var pay={memory:'https://buy.stripe.com/6oU9AMe4q8hY3tz2IJeIw00',family:'https://buy.stripe.com/00wfZaf8ueGm6FLcjjeIw01',memoryP:'https://buy.stripe.com/4gM5kwf8u7dU0hn4QReIw03',familyP:'https://buy.stripe.com/14A9AMf8u55M8NTerreIw04'};
       var pk=pv.indexOf('Memory')===0?'memory':pv.indexOf('Family')===0?'family':'custom';
+      if(pk!=='custom'&&document.getElementById('priority').checked) pk+='P';
       try{ localStorage.setItem('tmp_order', JSON.stringify({ref:ref, first:(document.getElementById('name').value.trim().split(/\s+/)[0]||'')})); }catch(_){}
       var promo=invite&&pk!=='custom' ? '&prefilled_promo_code=FRIEND5' : '';
       if(pay[pk]){ submitStatus.textContent='Taking you to secure payment…'; window.location.href=pay[pk]+'?client_reference_id='+ref+promo; }
@@ -590,7 +850,7 @@ var invite=null;
       submitStatus.style.color='#a33';
     }
   });
-  update(); btnLabel();
+  update(); btnLabel(); prioShow();
 })();
 </script>
 </body>

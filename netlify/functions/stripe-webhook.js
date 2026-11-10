@@ -6,7 +6,7 @@
 
 const crypto = require("crypto");
 const { getStore, connectLambda } = require("@netlify/blobs");
-const { sendOrderEmails } = require("../lib/orders.js");
+const { sendOrderEmails, sendVoucherEmails } = require("../lib/orders.js");
 
 function verify(rawBody, header, secret) {
   if (!header || !secret) return false;
@@ -34,6 +34,17 @@ exports.handler = async (event) => {
   if (session.payment_status !== "paid") return { statusCode: 200, body: "Not paid yet" };
 
   const ref = String(session.client_reference_id || "").toUpperCase();
+
+  // Gift vouchers (payment links opened with client_reference_id=VOUCHER-MEMORY / VOUCHER-FAMILY)
+  if (ref.startsWith("VOUCHER")) {
+    const c = session.customer_details || {};
+    const field = (session.custom_fields || []).find((f) => /recipient/i.test(f.key || "") || /recipient/i.test((f.label && f.label.custom) || ""));
+    const recipient = field && field.text ? field.text.value : "";
+    const amount = typeof session.amount_total === "number" ? "£" + (session.amount_total / 100).toFixed(2) : "";
+    await sendVoucherEmails({ kind: ref.includes("FAMILY") ? "FAMILY" : "MEMORY", buyer: c.name || "", email: c.email || "", recipient, amount, stripeId: session.payment_intent || session.id });
+    return { statusCode: 200, body: "Voucher sent" };
+  }
+
   connectLambda(event);
   const store = getStore("orders");
   const order = ref ? await store.get(ref, { type: "json" }) : null;
