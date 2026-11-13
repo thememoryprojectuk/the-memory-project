@@ -7,7 +7,7 @@
 //   GMAIL_USER, GMAIL_APP_PASSWORD, NOTIFY_TO (see netlify/lib/orders.js)
 
 const { getStore, connectLambda } = require("@netlify/blobs");
-const { fileUrl, sendOrderEmails } = require("../lib/orders.js");
+const { fileUrl, sendOrderEmails, sendFreeClipEmails } = require("../lib/orders.js");
 
 exports.handler = async (event) => {
   let payload;
@@ -16,6 +16,22 @@ exports.handler = async (event) => {
   } catch (e) {
     console.error("Bad payload", e);
     return { statusCode: 400, body: "Bad payload" };
+  }
+  if (payload && payload.form_name === "freeclip") {
+    const d = payload.data || {};
+    const key = String(d.email || "").trim().toLowerCase();
+    let repeat = false, prevDate = "";
+    try {
+      connectLambda(event);
+      const store = getStore("freeclips");
+      if (key) {
+        const prev = await store.get(key, { type: "json" });
+        if (prev) { repeat = true; prevDate = prev.created; }
+        else await store.setJSON(key, { name: d.name, created: new Date().toISOString(), marketing: d["marketing-ok"] === "yes" });
+      }
+    } catch (e) { console.error("Free clip store failed", e); }
+    await sendFreeClipEmails({ d, photo: fileUrl(d.photo), repeat, prevDate });
+    return { statusCode: 200, body: "Free clip request" };
   }
   if (!payload || payload.form_name !== "order") return { statusCode: 200, body: "Not an order" };
 

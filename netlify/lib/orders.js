@@ -141,4 +141,34 @@ async function sendVoucherEmails({ kind, buyer, email, recipient, amount, stripe
   return true;
 }
 
-module.exports = { esc, row, wrap, fileUrl, BUSINESS, sendOrderEmails, sendVoucherEmails };
+// Free clip week: tell the team, and confirm to the person (not on repeats).
+async function sendFreeClipEmails({ d, photo, repeat, prevDate }) {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) { console.error("GMAIL_USER / GMAIL_APP_PASSWORD not set"); return false; }
+  const notifyTo = process.env.NOTIFY_TO || user;
+  const first = String(d.name || "").trim().split(/\s+/)[0] || "there";
+  const consent = d["marketing-ok"] === "yes" ? "YES, add to offers list" : "No";
+  const alertHtml = wrap(`
+<h2 style="font-family:Georgia,serif;margin:0 0 12px">🎞️ Free clip request${repeat ? " (REPEAT)" : ""}</h2>
+<table style="border-collapse:collapse;font-size:15px">${row("Name", d.name)}${row("Email", d.email)}${row("Marketing emails", consent)}${repeat ? row("Already asked", prevDate || "yes") : ""}</table>
+<p style="margin-top:16px"><strong>Photo:</strong> ${photo ? `<a href="${esc(photo)}" style="color:#8a5a3b">Open photo</a>` : "<em>No photo came through</em>"}</p>
+<p style="font-size:13px;color:#6b5f55">${repeat ? "<strong>This email has already had a free clip request.</strong> One per email address, so you can skip this one.<br>" : "<strong>To do:</strong> make a short clip (no music or text, small logo in the corner) and reply to this email with it, ideally within 48 hours. Link them to Christmas ordering (cut-off 15 December).<br>"}They confirmed the photo is theirs or they have permission. Delete the photo 30 days after sending the clip.</p>`);
+  const custHtml = wrap(`
+<p>Hi ${esc(first)},</p>
+<p>Thank you for sending us your photo. We'll bring it to life and email you your free clip as soon as we can, usually within a few days.</p>
+<p>Your free clip will be a few seconds of your photo gently moving, on its own. A full film brings several photos to life and adds music, a title and your own message, and it makes a lovely Christmas gift. Christmas orders close on <strong>15 December</strong>: <a href="${BUSINESS.site}/#prices" style="color:#8a5a3b">see our films</a>.</p>
+<p>Any questions, just reply to this email.</p>
+<p>Warm wishes,<br>The Memory Project</p>
+<p style="font-size:12px;color:#6b5f55">One free clip per email address. <a href="${BUSINESS.site}/terms.html#free-clip" style="color:#8a5a3b">Offer terms</a> &middot; <a href="${BUSINESS.site}/privacy.html" style="color:#8a5a3b">Privacy Policy</a></p>`);
+  const transporter = nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
+  const from = `"The Memory Project" <${user}>`;
+  const results = await Promise.allSettled([
+    transporter.sendMail({ from, to: notifyTo, replyTo: d.email || undefined, subject: `🎞️ ${repeat ? "REPEAT " : ""}Free clip request from ${d.name || d.email || "someone"}`, html: alertHtml }),
+    d.email && !repeat ? transporter.sendMail({ from, to: d.email, replyTo: user, subject: "We've got your photo", html: custHtml }) : Promise.resolve("skipped"),
+  ]);
+  results.forEach((r, i) => { if (r.status === "rejected") console.error(i === 0 ? "Free clip alert failed:" : "Free clip confirmation failed:", r.reason); });
+  return true;
+}
+
+module.exports = { esc, row, wrap, fileUrl, BUSINESS, sendOrderEmails, sendVoucherEmails, sendFreeClipEmails };

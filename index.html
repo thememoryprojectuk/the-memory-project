@@ -292,6 +292,18 @@ h2 .hl{font-style:italic;background:linear-gradient(transparent 58%,#e9c88e 58%,
 .btn.ghost:hover{background:var(--blue);color:#fff}
 .talk .links a{border-color:var(--blue);color:var(--blue)}
 .heard .opts button:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ---- Free clip week (shown only 14–20 Nov 2026 by script) ---- */
+.freebar{background:var(--blue);color:#f7f1e6;text-align:center;padding:12px 20px;font-size:.98rem}
+.freebar a{color:#f1cf94;font-weight:600}
+.freeclip{background:linear-gradient(180deg,#fbf4e8,#f6ecdd)}
+.freeclip .sub{color:var(--muted);max-width:560px;margin:12px auto 0}
+.freeclip form{max-width:520px;margin:30px auto 0;text-align:left;background:#fffaf1;border:1px solid var(--line);border-top:5px solid var(--blue);border-radius:16px;padding:28px 24px;box-shadow:0 10px 28px rgba(60,40,20,.07)}
+.freeclip .btn{width:100%;margin-top:6px;cursor:pointer;font-size:1rem}
+.freeclip .note{font-size:.88rem;color:var(--muted);margin-top:12px;text-align:center}
+.freeclip .drop{display:block;border:2px dashed #d9c7ae;border-radius:12px;padding:22px;text-align:center;cursor:pointer;color:var(--sepia);font-weight:600;background:#fffdf8}
+.freeclip .drop img{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:0 auto 8px}
+.freeclip .err{color:#a33;font-size:.92rem;margin-top:10px}
 </style>
 </head>
 <body>
@@ -325,7 +337,32 @@ h2 .hl{font-style:italic;background:linear-gradient(transparent 58%,#e9c88e 58%,
 </section>
 
 <div class="invited" id="invited" hidden>🎁 <strong id="invited-who">A friend</strong> invited you: <strong>£5 off your first film</strong>. It's applied automatically when you pay.</div>
+<div class="freebar" id="freebar" hidden>🎞️ <strong>This week only:</strong> try one photo free. <a href="#free">Send us a photo →</a></div>
 <div class="xmas"><strong>Christmas orders:</strong> order by 15 December and your film arrives by 20 December.</div>
+
+<section class="center freeclip" id="free" hidden>
+  <div class="wrap">
+    <p class="eyebrow">This week only</p>
+    <h2>Try one photo <em class="hl">free</em></h2>
+    <p class="sub">Send us one old family photo and we'll bring it to life for free: a few seconds of gentle movement, just the photo itself with no music or text. See a loved one move again before you order a whole film. Open until Friday 20 November.</p>
+    <form name="freeclip" id="free-form" novalidate method="POST" action="/thanks.html?free=1" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="freeclip">
+      <p hidden><label>Leave this empty <input name="bot-field"></label></p>
+      <div class="field"><label for="fc-name">Your name <span class="req">*</span></label><input id="fc-name" name="name" autocomplete="name" required></div>
+      <div class="field"><label for="fc-email">Your email <span class="req">*</span></label><input id="fc-email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Your photo <span class="req">*</span></label>
+        <label class="drop" for="fc-photo" id="fc-drop"><span id="fc-drop-text">Tap to choose a photo</span></label>
+        <input id="fc-photo" name="photo" type="file" accept="image/*" hidden>
+        <p class="hint">A photo of an old print, taken on your phone, is perfect.</p>
+      </div>
+      <label class="check"><input type="checkbox" name="marketing-ok" value="yes"><span>Remind me before the Christmas order cut-off, and send me the occasional offer. You can unsubscribe any time.</span></label>
+      <label class="check"><input type="checkbox" id="fc-ok" name="photo-permission-and-terms" value="yes" required><span>This is my own family photo, or I have permission to use it, and I've read the <a href="/terms.html#free-clip" target="_blank">free clip terms</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>. <span class="req">*</span></span></label>
+      <button class="btn" type="submit" id="fc-submit">Send my free photo</button>
+      <p class="err" id="fc-err" hidden></p>
+      <p class="note">One free clip per email address. We'll email it to you as soon as we can, usually within a few days.</p>
+    </form>
+  </div>
+</section>
 
 <section class="example center" id="example">
   <div class="wrap">
@@ -851,6 +888,60 @@ var REVIEWS=[
     }
   });
   update(); btnLabel(); prioShow();
+})();
+</script>
+
+<script>
+/* Free clip week: shown only between these dates (UK time = UTC in November) */
+(function(){
+  var start=Date.parse('2026-11-14T00:00:00Z'), end=Date.parse('2026-11-20T23:59:59Z'), now=Date.now();
+  var q=new URLSearchParams(location.search);
+  if(!((now>=start&&now<=end)||q.has('freepreview'))) return;
+  document.getElementById('freebar').hidden=false;
+  document.getElementById('free').hidden=false;
+  var form=document.getElementById('free-form'), input=document.getElementById('fc-photo'),
+      drop=document.getElementById('fc-drop'), err=document.getElementById('fc-err'),
+      btn=document.getElementById('fc-submit'), blob=null;
+  function shrinkOne(file){
+    return new Promise(function(resolve){
+      var url=URL.createObjectURL(file), img=new Image();
+      img.onload=function(){
+        var s=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));
+        var c=document.createElement('canvas'); c.width=Math.round(img.naturalWidth*s); c.height=Math.round(img.naturalHeight*s);
+        var x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(img,0,0,c.width,c.height);
+        c.toBlob(function(b){URL.revokeObjectURL(url);resolve(b);},'image/jpeg',0.85);
+      };
+      img.onerror=function(){URL.revokeObjectURL(url);resolve(null);};
+      img.src=url;
+    });
+  }
+  input.addEventListener('change',async function(){
+    var f=input.files&&input.files[0]; if(!f) return;
+    err.hidden=true;
+    blob=await shrinkOne(f);
+    if(!blob){ blob=null; err.textContent="Sorry, we couldn't read that photo. Please try a JPG or PNG."; err.hidden=false; return; }
+    drop.innerHTML='<img alt="Your photo" src="'+URL.createObjectURL(blob)+'"><span>Tap to change photo</span>';
+  });
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    var miss=[];
+    if(!form.name.value.trim()) miss.push('your name');
+    if(!/^\S+@\S+\.\S+$/.test(form.email.value.trim())) miss.push('a valid email');
+    if(!blob) miss.push('a photo');
+    if(!document.getElementById('fc-ok').checked) miss.push('the photo permission tick box');
+    if(miss.length){ err.textContent='Please add '+miss.join(', ')+'.'; err.hidden=false; return; }
+    err.hidden=true; btn.disabled=true; btn.textContent='Sending…';
+    var fd=new FormData(form); fd.delete('photo'); fd.append('photo',blob,'photo.jpg');
+    try{
+      var r=await fetch('/',{method:'POST',body:fd});
+      if(!r.ok) throw new Error(r.status);
+      location.href='/thanks.html?free=1';
+    }catch(x){
+      btn.disabled=false; btn.textContent='Send my free photo';
+      err.textContent="Sorry, your photo wasn't sent. Please check your connection and try again, or email it to thememoryprojectteam@gmail.com.";
+      err.hidden=false;
+    }
+  });
 })();
 </script>
 </body>
