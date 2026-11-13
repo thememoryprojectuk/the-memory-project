@@ -230,12 +230,12 @@ header .logo{color:var(--ink)}
 .plan.pop{border-color:var(--gold)}
 
 /* ---- blue accents (from the logo) ---- */
-:root{--blue:#8a5a3b;--blue-soft:#f6ece0}
+:root{--blue:#2d5a43;--blue-soft:#e5efe7}
 main section:not(.hero):not(.order) .eyebrow{color:var(--blue)}
 .center h2::after,.center > h2::after{background:radial-gradient(circle,var(--blue) 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(var(--gold),var(--gold)) left center/24px 1px no-repeat,linear-gradient(var(--gold),var(--gold)) right center/24px 1px no-repeat}
 .step .n{border-color:var(--blue);color:var(--blue)}
 summary::after{color:var(--blue)}
-.check.prio{border-color:#e6d3bd;background:var(--blue-soft)}
+.check.prio{border-color:#c8dccd;background:var(--blue-soft)}
 .example{background:linear-gradient(180deg,var(--paper),#eef3ee)}
 .talk .links a:nth-child(2){border-color:var(--blue);color:var(--blue)}
 /* payment methods */
@@ -244,7 +244,7 @@ summary::after{color:var(--blue)}
 .pay-ways .klarna{background:#ffb3c7;border-color:#ffb3c7;color:#17120f}
 .pay-note{font-size:.85rem;color:var(--muted);margin-top:8px}
 /* photo tips */
-.tips{margin-top:12px;border:1px solid #e6d3bd;background:var(--blue-soft);border-radius:10px;padding:10px 14px;text-align:left}
+.tips{margin-top:12px;border:1px solid #c8dccd;background:var(--blue-soft);border-radius:10px;padding:10px 14px;text-align:left}
 .tips summary{font-family:var(--sans);font-size:.95rem;font-weight:600;color:#24473a}
 .tips summary::after{color:var(--blue)}
 .tips ul{margin:10px 0 2px 18px;font-size:.92rem;color:#3a3530}
@@ -267,7 +267,7 @@ summary::after{color:var(--blue)}
 /* more blue */
 .step .n{background:var(--blue);color:#f7f1e6;border-color:var(--blue)}
 .plan li::before{border-color:var(--blue)}
-.gift{background:linear-gradient(180deg,#3b2a20,#5e3f2c);color:#f2ede4}
+.gift{background:linear-gradient(180deg,#1f3b2d,#2d5a43);color:#f2ede4}
 .gift .eyebrow{color:#e2b878!important}.gift h2{color:#fff}.gift .sub{color:#d6e2d8;max-width:560px;margin:10px auto 0}
 .gift h2::after{background:radial-gradient(circle,#e2b878 0 3px,transparent 3.5px) center/12px 12px no-repeat,linear-gradient(#e2b878,#e2b878) left center/24px 1px no-repeat,linear-gradient(#e2b878,#e2b878) right center/24px 1px no-repeat!important}
 .vouchers{display:grid;gap:16px;margin-top:30px}
@@ -278,7 +278,7 @@ summary::after{color:var(--blue)}
 .voucher p{color:var(--muted);font-size:.93rem;padding-right:96px}
 .voucher .v-price{position:absolute;top:22px;right:12px;width:62px;text-align:center;font-family:var(--serif);font-size:1.45rem;font-weight:600;color:var(--blue)}
 .voucher .btn{margin-top:14px;background:var(--blue);border-color:var(--blue);color:#fff}
-.voucher .btn:hover{background:#6e4529;border-color:#6e4529}
+.voucher .btn:hover{background:#1f4231;border-color:#1f4231}
 .gift .small{color:#c9d8cc;font-size:.88rem;margin-top:18px}
 
 /* Streak of colour: green top edges, gold highlight, green buttons */
@@ -286,14 +286,20 @@ h2 .hl{font-style:italic;background:linear-gradient(transparent 58%,#e9c88e 58%,
 .order h2 .hl{color:#f1cf94;background:linear-gradient(transparent 62%,rgba(233,200,142,.22) 62%,rgba(233,200,142,.22) 90%,transparent 90%)}
 .step,.plan,.talk .card,.order form{border-top:5px solid var(--blue)}
 .plan.pop{border-color:var(--blue);border-top-width:5px}
-.btn{background:var(--blue);border-color:var(--blue);box-shadow:0 6px 16px rgba(110,69,41,.2)}
-.btn:hover{background:#6e4529;border-color:#6e4529}
+.btn{background:var(--blue);border-color:var(--blue);box-shadow:0 6px 16px rgba(31,59,45,.2)}
+.btn:hover{background:#1f4231;border-color:#1f4231}
 .btn.ghost{background:transparent;color:var(--blue);border-color:var(--blue);box-shadow:none}
 .btn.ghost:hover{background:var(--blue);color:#fff}
 .talk .links a{border-color:var(--blue);color:var(--blue)}
 .heard .opts button:hover{border-color:var(--blue);color:var(--blue)}
 
 footer .follow{margin-top:10px}footer .follow a{color:var(--gold);font-weight:600}
+/* ---- Warm brown instead of green: top bar, first section, prices ---- */
+header,.hero,#prices{--blue:#8a5a3b;--blue-soft:#f6ece0}
+header .btn,.hero .btn,#prices .btn{box-shadow:0 6px 16px rgba(110,69,41,.2)}
+header .btn:hover,.hero .btn:hover,#prices .btn:hover{background:#6e4529;border-color:#6e4529}
+header .btn.ghost,.hero .btn.ghost,#prices .btn.ghost{box-shadow:none}
+.hero .btn.ghost:hover,#prices .btn.ghost:hover{background:var(--blue);border-color:var(--blue);color:#fff}
 /* ---- Reminders signup ---- */
 .reminders{padding-bottom:60px}
 .reminders .sub{color:var(--muted);max-width:560px;margin:12px auto 0}
