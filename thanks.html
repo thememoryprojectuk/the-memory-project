@@ -41,7 +41,7 @@ a{display:inline-block;background:#8a5a3b;color:#fff;text-decoration:none;paddin
 <script>
 (function(){
   var o=null; try{ o=JSON.parse(localStorage.getItem('tmp_order')||'null'); }catch(_){}
-  if(!o||!o.ref||new URLSearchParams(location.search).get('free')) return;
+  if(!o||!o.ref||new URLSearchParams(location.search).get('free')||new URLSearchParams(location.search).get('reminders')) return;
   var link=location.origin+'/?ref='+encodeURIComponent(o.ref)+(o.first?'&from='+encodeURIComponent(o.first):'');
   var msg="I've just ordered a film from The Memory Project. They turn old family photos into short films where the faces smile and move again. Here's £5 off your first one: "+link;
   document.getElementById('share-wa').href='https://wa.me/?text='+encodeURIComponent(msg);
@@ -58,6 +58,11 @@ if(new URLSearchParams(location.search).get('voucher')){
   document.querySelector('h1').textContent='Thank you, what a lovely gift.';
   document.getElementById('msg').textContent="Your payment went through. We'll email your gift voucher code within 24 hours, ready to print or forward. Stripe will email you a receipt.";
   try{localStorage.removeItem('tmp_order');}catch(_){}
+}
+if(new URLSearchParams(location.search).get('reminders')){
+  document.querySelector('h1').textContent="You're on the list.";
+  document.getElementById('msg').innerHTML="We'll email you a little before Christmas, Mother's Day and Father's Day. You can unsubscribe any time by replying to any of our emails.";
+  document.getElementById('invite').hidden=true;
 }
 if(new URLSearchParams(location.search).get('free')){
   document.querySelector('h1').textContent='Thank you, we\'ve got your photo.';
